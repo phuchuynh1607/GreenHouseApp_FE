@@ -16,7 +16,7 @@ const UserDetailScreen = ({ route, navigation }) => {
   const { userId } = route.params; // Lấy ID truyền từ UserListScreen
   const { selectedUserDetail, loading, getUserDetail, deleteUser } = useAdmin();
 
-  const BASE_URL = "http://172.16.5.206:8000";
+  const BASE_URL = "http://10.10.61.124:8000";
 
   useEffect(() => {
     if (userId) {

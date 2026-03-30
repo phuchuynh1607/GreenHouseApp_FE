@@ -15,7 +15,7 @@ const UserProfileScreen = ({ navigation }) => {
   const { profile } = useUserProfile();
   const { logout } = useAuth();
 
-  const BASE_URL = "http://172.16.5.206:8000"; // Đổi IP cho khớp với server của bạn
+  const BASE_URL = "http://10.10.61.124:8000"; // Đổi IP cho khớp với server của bạn
 
   // Logic hiển thị ảnh: Nếu có ảnh từ server thì dùng, không thì dùng Icon mặc định
   const renderAvatar = () => {
@@ -92,7 +92,9 @@ const UserProfileScreen = ({ navigation }) => {
           <MenuItem
             icon="notifications-outline"
             title="Lịch sử cảnh báo"
-            onPress={() => navigation.navigate("NotificationsHistory")}
+            onPress={() => {
+              navigation.navigate("NotificationsHistory");
+            }}
             color="#F59E0B"
             isLast={true}
           />
@@ -195,6 +197,21 @@ const styles = StyleSheet.create({
     color: "#EF4444",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  inlineBadge: {
+    backgroundColor: "#EF4444",
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "bold",
   },
 });
 

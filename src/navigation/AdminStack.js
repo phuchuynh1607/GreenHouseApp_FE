@@ -7,6 +7,9 @@ import SystemThresholdScreen from "../screens/admin/SystemThresholdScreen";
 import UsersListScreen from "../screens/admin/UserListScreen";
 import UserDetailScreen from "../screens/admin/UserDetailScreen";
 import AdminUserLoginHistoryScreen from "../screens/admin/AdminUserLoginHistoryScreen";
+import AdminNotificationLogScreen from "../screens/admin/AdminNotificationLogScreen";
+import AdminFeedbackListScreen from "../screens/admin/AdminFeedbackListScreen";
+import AdminFeedbackDetailScreen from "../screens/admin/AdminFeedbackDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +31,18 @@ const AdminStack = () => {
       <Stack.Screen
         name="UserLoginHistory"
         component={AdminUserLoginHistoryScreen}
+      />
+      <Stack.Screen
+        name="AdminNotificationLog"
+        component={AdminNotificationLogScreen}
+      />
+      <Stack.Screen
+        name="AdminFeedbackList"
+        component={AdminFeedbackListScreen}
+      />
+      <Stack.Screen
+        name="AdminFeedbackDetail"
+        component={AdminFeedbackDetailScreen}
       />
 
       {/* 3. Luồng Quản lý hệ thống */}

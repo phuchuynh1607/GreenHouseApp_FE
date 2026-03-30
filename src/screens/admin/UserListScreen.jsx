@@ -16,7 +16,7 @@ import { useAdmin } from "../../hooks/useAdmin";
 const UsersListScreen = ({ navigation }) => {
   const { users, loading, refreshUsers } = useAdmin();
   const [searchQuery, setSearchQuery] = useState("");
-  const BASE_URL = "http://172.16.5.206:8000";
+  const BASE_URL = "http://10.10.61.124:8000";
 
   const filteredUsers = useMemo(() => {
     return users.filter(

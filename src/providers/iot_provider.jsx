@@ -6,6 +6,7 @@ import {
   updateDeviceSettings,
   fetchNotifications,
   fetchSensorHistory,
+  markAllNotificationsAsReadApi,
 } from "../services/iot.service";
 import { useAuth } from "../hooks/useAuth";
 
@@ -13,6 +14,7 @@ export const IotProvider = ({ children }) => {
   const [sensors, setSensors] = useState(null);
   const [devices, setDevices] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -45,11 +47,25 @@ export const IotProvider = ({ children }) => {
     try {
       const notificationsData = await fetchNotifications();
       setNotifications(notificationsData);
+      if (user.role === "admin") {
+        const count = notificationsData.filter(
+          (n) => n.is_read === false,
+        ).length;
+        setUnreadCount(count);
+      }
     } catch (err) {
       console.error("Lỗi fetch Notifications:", err);
     }
   }, [user]);
-
+  // Hàm gọi API mark-all-as-read
+  const handleMarkAsRead = async () => {
+    try {
+      await markAllNotificationsAsReadApi();
+      setUnreadCount(0);
+    } catch (err) {
+      console.error("Không thể đánh dấu đã đọc:", err);
+    }
+  };
   /**
    * 3. Hàm điều khiển thiết bị (Cải tiến)
    * @param {number} deviceIndex - Index của thiết bị
@@ -148,6 +164,8 @@ export const IotProvider = ({ children }) => {
         refreshHistory,
         refreshNotificationData,
         controlDevice: handleControlDevice,
+        markedasRead: handleMarkAsRead,
+        unreadCount,
       }}
     >
       {children}

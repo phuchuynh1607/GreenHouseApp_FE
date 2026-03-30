@@ -6,6 +6,7 @@ import {
   sendMessageApi,
   fetchTicketDetailsApi,
   updateTicketStatusApi,
+  fetchAllTicketsAdminApi,
 } from "../services/feedback.service";
 import { useAuth } from "../hooks/useAuth";
 
@@ -15,12 +16,18 @@ export const FeedbackProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // 1. Lấy danh sách tất cả ticket của user
+  // 1. Lấy danh sách ticket (Tự động phân loại User/Admin)
   const getMyTickets = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     try {
-      const data = await fetchMyTicketsApi();
+      let data;
+      // Nếu là admin, gọi API lấy tất cả. Nếu là user, lấy của chính mình.
+      if (user.role === "admin") {
+        data = await fetchAllTicketsAdminApi();
+      } else {
+        data = await fetchMyTicketsApi();
+      }
       setTickets(data);
     } catch (err) {
       console.error("Lỗi fetch tickets:", err);

@@ -56,6 +56,7 @@ export const fetchMyTicketsApi = async () => {
 export const fetchAllTicketsAdminApi = async () => {
   return (await axiosClient.get("/feedback/admin/all-tickets")).data;
 };
+//6.Admin/User: Update trạng thái của ticket
 export const updateTicketStatusApi = async (ticketId, newStatus) => {
   try {
     const response = await axiosClient.patch(

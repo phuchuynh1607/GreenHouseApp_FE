@@ -82,3 +82,12 @@ export const fetchNotifications = async () => {
     throw error;
   }
 };
+export const markAllNotificationsAsReadApi = async () => {
+  try {
+    const response = await axiosClient.put("/iot/notifications/read-all");
+    return response.data;
+  } catch (error) {
+    console.error("Mark All Notifications As Read Error:", error.message);
+    throw error;
+  }
+};
