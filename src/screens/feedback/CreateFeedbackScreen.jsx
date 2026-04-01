@@ -59,21 +59,16 @@ const CreateFeedback = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          contentContainerStyle={[styles.container, { paddingTop: insets.top }]}
-        >
+        <ScrollView contentContainerStyle={[styles.container]}>
           {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
               style={styles.backButton}
             >
-              <Ionicons name="close-outline" size={28} color="#1F2937" />
+              <Ionicons name="close-outline" size={28} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.title}>Gửi phản hồi</Text>
             <View style={{ width: 40 }} />
@@ -145,10 +140,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
+    paddingTop: 45,
+    padding: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
+    backgroundColor: "#429257",
   },
-  title: { fontSize: 18, fontWeight: "bold", color: "#1F2937" },
+  title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   backButton: { padding: 4 },
 
   content: { padding: 20 },

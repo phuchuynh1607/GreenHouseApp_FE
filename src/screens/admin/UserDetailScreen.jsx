@@ -13,10 +13,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAdmin } from "../../hooks/useAdmin";
 
 const UserDetailScreen = ({ route, navigation }) => {
-  const { userId } = route.params; // Lấy ID truyền từ UserListScreen
+  const { userId } = route.params;
   const { selectedUserDetail, loading, getUserDetail, deleteUser } = useAdmin();
 
-  const BASE_URL = "http://10.10.61.124:8000";
+  const BASE_URL = "http://10.10.67.126:8000";
 
   useEffect(() => {
     if (userId) {
@@ -41,7 +41,7 @@ const UserDetailScreen = ({ route, navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" size={26} color="#111827" />
+          <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Thông tin chi tiết</Text>
         <View style={{ width: 40 }} />
@@ -124,13 +124,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: Platform.OS === "ios" ? 50 : 20,
-    paddingHorizontal: 20,
-    paddingBottom: 15,
+    paddingTop: 45,
+    padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
+    backgroundColor: "#429257",
   },
-  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#111827" },
+  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   avatarSection: { alignItems: "center", marginTop: 40, marginBottom: 30 },
   avatarWrapper: {
     padding: 4,

@@ -15,7 +15,7 @@ const UserProfileScreen = ({ navigation }) => {
   const { profile } = useUserProfile();
   const { logout } = useAuth();
 
-  const BASE_URL = "http://10.10.61.124:8000"; // Đổi IP cho khớp với server của bạn
+  const BASE_URL = "http://10.10.67.126:8000";
 
   // Logic hiển thị ảnh: Nếu có ảnh từ server thì dùng, không thì dùng Icon mặc định
   const renderAvatar = () => {

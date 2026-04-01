@@ -2,7 +2,7 @@ import axios from "axios";
 import { decode } from "base-64";
 import { tokenStorage } from "../tokenStorage/tokenStorage";
 
-const BASE_URL = "http://10.10.61.124:8000";
+const BASE_URL = "http://10.10.67.126:8000";
 
 const instance = axios.create({
   baseURL: BASE_URL,

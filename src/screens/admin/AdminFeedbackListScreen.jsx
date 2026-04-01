@@ -53,9 +53,7 @@ const AdminFeedbackListScreen = ({ navigation }) => {
                 color="#4B5563"
               />
               {/* Hiển thị tên User gửi - Giả định BE trả về user_name hoặc email */}
-              <Text style={styles.userNameText}>
-                {item.user_name || item.user_email || "Người dùng ẩn danh"}
-              </Text>
+              <Text style={styles.userNameText}>{item.user_name}</Text>
             </View>
             <Text style={styles.subjectText} numberOfLines={1}>
               {item.subject}
@@ -69,7 +67,7 @@ const AdminFeedbackListScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.messagePreview} numberOfLines={2}>
-          {item.initial_message || "Không có nội dung."}
+          {item.initial_message}
         </Text>
 
         <View style={styles.ticketFooter}>
@@ -135,9 +133,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 50,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
+    paddingTop: 45,
+    padding: 30,
     backgroundColor: "#429257",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },

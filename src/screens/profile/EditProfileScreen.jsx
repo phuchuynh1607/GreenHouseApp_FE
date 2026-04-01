@@ -31,7 +31,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUri, setPreviewUri] = useState(null);
 
-  const BASE_URL = "http://10.10.61.124:8000";
+  const BASE_URL = "http://10.10.67.126:8000";
 
   useEffect(() => {
     if (profile) {
@@ -75,10 +75,7 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[styles.container]}>
           {/* Header giữ giao diện hiện đại */}
@@ -87,7 +84,7 @@ const EditProfileScreen = ({ navigation }) => {
               onPress={() => navigation.goBack()}
               style={styles.backButton}
             >
-              <Ionicons name="close" size={28} color="#1F2937" />
+              <Ionicons name="close" size={28} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.title}>Chỉnh sửa hồ sơ</Text>
             <TouchableOpacity onPress={handleSave} disabled={loading}>
@@ -184,9 +181,10 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
+    backgroundColor: "#429257",
   },
-  title: { fontSize: 18, fontWeight: "bold", color: "#111827" },
-  saveBtnText: { fontSize: 16, fontWeight: "bold", color: "#2f6b3f" },
+  title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
+  saveBtnText: { fontSize: 16, fontWeight: "bold", color: "#fff" },
   avatarSection: { alignItems: "center", marginVertical: 30 },
   avatarWrapper: { position: "relative" },
   avatar: {

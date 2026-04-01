@@ -104,7 +104,7 @@ const FeedbackHistoryScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.messagePreview} numberOfLines={2}>
-          {item.initial_message || "Không có nội dung mô tả."}
+          {item.initial_message}
         </Text>
 
         <View style={styles.ticketFooter}>
@@ -129,7 +129,7 @@ const FeedbackHistoryScreen = ({ navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("UserProfileMain")}
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
@@ -191,6 +191,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 45,
     padding: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
     backgroundColor: "#429257",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },

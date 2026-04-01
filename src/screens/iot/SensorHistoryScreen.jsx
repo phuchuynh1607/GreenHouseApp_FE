@@ -16,7 +16,6 @@ const SensorHistoryScreen = ({ route, navigation }) => {
   // Nhận type từ Dashboard (ví dụ: 'temp', 'light', 'soil', 'humi')
   const { type } = route.params || { type: "temp" };
 
-  // Giả lập dữ liệu (Sau này bạn sẽ lấy từ useIoT hoặc gọi API theo type)
   const historyData = useMemo(() => {
     return {
       labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"],
@@ -43,7 +42,7 @@ const SensorHistoryScreen = ({ route, navigation }) => {
       {/* Custom Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{config.title}</Text>
         <View style={{ width: 24 }} />
@@ -101,12 +100,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 50,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    backgroundColor: "#fff",
+    paddingTop: 45,
+    padding: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
+    backgroundColor: "#429257",
   },
-  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#333" },
+  headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   content: { padding: 20 },
   chartContainer: {
     backgroundColor: "#fff",

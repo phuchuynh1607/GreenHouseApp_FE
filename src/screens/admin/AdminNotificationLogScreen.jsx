@@ -149,12 +149,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    backgroundColor: "#1F2937", // Màu tối chuyên nghiệp cho Admin
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    paddingTop: 45,
+    padding: 30,
+    backgroundColor: "#429257",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
   },
   headerTitleContainer: { flex: 1, marginLeft: 10 },
   headerTitle: { fontSize: 20, fontWeight: "bold", color: "#fff" },

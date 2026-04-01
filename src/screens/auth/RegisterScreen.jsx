@@ -92,10 +92,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.card}>
           <View style={styles.header}>
@@ -181,7 +178,7 @@ const RegisterScreen = ({ navigation }) => {
               name="confirmPassword"
               label="Xác nhận mật khẩu"
               placeholder="******"
-              secureTextEntry={false}
+              secureTextEntry={true}
             />
             <Text style={styles.warningText}>
               ⚠️ Bạn sẽ dùng username và mật khẩu này để đăng nhập sau này.

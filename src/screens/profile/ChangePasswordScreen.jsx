@@ -105,10 +105,7 @@ const ChangePasswordScreen = ({ navigation }) => {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#fff" }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[styles.container]}>
           {/* Header */}
@@ -197,6 +194,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 45,
     padding: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
     backgroundColor: "#429257",
   },
   title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
