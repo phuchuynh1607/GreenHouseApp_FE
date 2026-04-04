@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   View,
   Text,
@@ -8,99 +10,102 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUserProfile } from "../../hooks/useUserProfile";
+import { changePasswordSchema } from "../../schemas/changePasswordSchema";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const { changePassword } = useUserProfile;
-  // State quản lý mật khẩu
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  // State ẩn/hiện mật khẩu
   const [showPass, setShowPass] = useState({
     current: false,
     new: false,
     confirm: false,
   });
 
-  const handleChangePassword = async () => {
-    const { currentPassword, newPassword, confirmPassword } = passwords;
+  const { changePassword } = useUserProfile();
 
-    // Validation cơ bản
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert("Lỗi", "Vui lòng nhập đầy đủ các trường.");
-      return;
-    }
-    if (newPassword.length < 6) {
-      Alert.alert("Lỗi", "Mật khẩu mới phải có ít nhất 6 ký tự.");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      Alert.alert("Lỗi", "Xác nhận mật khẩu mới không khớp.");
-      return;
-    }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      password: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
+  const onSubmit = async (data) => {
     setLoading(true);
+
     try {
+      // Gọi API đổi mật khẩu
       await changePassword({
-        password: currentPassword,
-        new_password: newPassword,
+        password: data.password,
+        new_password: data.newPassword,
       });
 
       Alert.alert("Thành công", "Mật khẩu của bạn đã được thay đổi!", [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
-
-      setPasswords({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
     } catch (error) {
-      Alert.alert("Thất bại", error.message);
+      console.error("Change password error:", error);
+
+      let errorMessage = "Không thể đổi mật khẩu";
+      if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      Alert.alert("Thất bại", errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const PasswordInput = ({
+  const PasswordField = ({
+    name,
     label,
-    value,
-    onChange,
-    isShow,
-    toggleShow,
     placeholder,
+    showPass,
+    onToggleShow,
   }) => (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={value}
-          onChangeText={onChange}
-          placeholder={placeholder}
-          secureTextEntry={!isShow}
-          placeholderTextColor="#9CA3AF"
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder={placeholder}
+              secureTextEntry={!showPass}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              placeholderTextColor="#9CA3AF"
+            />
+          )}
         />
-        <TouchableOpacity onPress={toggleShow} style={styles.eyeIcon}>
+        <TouchableOpacity onPress={onToggleShow} style={styles.eyeIcon}>
           <Ionicons
-            name={isShow ? "eye-off-outline" : "eye-outline"}
+            name={showPass ? "eye-outline" : "eye-off-outline"}
             size={20}
             color="#6B7280"
           />
         </TouchableOpacity>
       </View>
+      {errors[name] && (
+        <Text style={styles.errorText}>{errors[name].message}</Text>
+      )}
     </View>
   );
 
@@ -129,48 +134,39 @@ const ChangePasswordScreen = ({ navigation }) => {
               </Text>
             </View>
 
-            <PasswordInput
+            <PasswordField
+              name="password"
               label="Mật khẩu hiện tại"
-              value={passwords.currentPassword}
-              onChange={(txt) =>
-                setPasswords({ ...passwords, currentPassword: txt })
-              }
-              isShow={showPass.current}
-              toggleShow={() =>
+              placeholder="Nhập mật khẩu đang dùng"
+              showPass={showPass.current}
+              onToggleShow={() =>
                 setShowPass({ ...showPass, current: !showPass.current })
               }
-              placeholder="Nhập mật khẩu đang dùng"
             />
 
-            <PasswordInput
+            <PasswordField
+              name="newPassword"
               label="Mật khẩu mới"
-              value={passwords.newPassword}
-              onChange={(txt) =>
-                setPasswords({ ...passwords, newPassword: txt })
-              }
-              isShow={showPass.new}
-              toggleShow={() =>
+              placeholder="Tối thiểu 6 ký tự"
+              showPass={showPass.new}
+              onToggleShow={() =>
                 setShowPass({ ...showPass, new: !showPass.new })
               }
-              placeholder="Tối thiểu 6 ký tự"
             />
 
-            <PasswordInput
+            <PasswordField
+              name="confirmPassword"
               label="Xác nhận mật khẩu mới"
-              value={passwords.confirmPassword}
-              onChange={(txt) =>
-                setPasswords({ ...passwords, confirmPassword: txt })
-              }
-              isShow={showPass.confirm}
-              toggleShow={() =>
+              placeholder="Nhập lại mật khẩu mới"
+              showPass={showPass.confirm}
+              onToggleShow={() =>
                 setShowPass({ ...showPass, confirm: !showPass.confirm })
               }
-              placeholder="Nhập lại mật khẩu mới"
             />
 
             <TouchableOpacity
               style={[styles.btnSubmit, loading && { opacity: 0.7 }]}
-              onPress={handleChangePassword}
+              onPress={handleSubmit(onSubmit)}
               disabled={loading}
             >
               {loading ? (
@@ -198,6 +194,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#F3F4F6",
     backgroundColor: "#429257",
   },
+  backButton: { padding: 5 },
   title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   content: { padding: 25 },
   infoBox: {
@@ -215,7 +212,6 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     lineHeight: 18,
   },
-
   inputGroup: { marginBottom: 20 },
   label: { fontSize: 14, fontWeight: "600", color: "#374151", marginBottom: 8 },
   inputContainer: {
@@ -234,7 +230,6 @@ const styles = StyleSheet.create({
     color: "#111827",
   },
   eyeIcon: { padding: 12 },
-
   btnSubmit: {
     backgroundColor: "#2f6b3f",
     paddingVertical: 16,
@@ -248,6 +243,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   btnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  errorText: {
+    color: "#EF4444",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+  },
 });
 
 export default ChangePasswordScreen;

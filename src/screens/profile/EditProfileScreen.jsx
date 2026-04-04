@@ -16,11 +16,9 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUserProfile } from "../../hooks/useUserProfile";
 
 const EditProfileScreen = ({ navigation }) => {
-  const insets = useSafeAreaInsets();
   const { profile, updateProfile, loading } = useUserProfile();
 
   const [formData, setFormData] = useState({
@@ -31,7 +29,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUri, setPreviewUri] = useState(null);
 
-  const BASE_URL = "http://10.10.67.126:8000";
+  const BASE_URL = "http://172.16.5.193:8000";
 
   useEffect(() => {
     if (profile) {
@@ -96,7 +94,6 @@ const EditProfileScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Logic hiển thị ảnh (Dùng previewUri hoặc Icon thay vì require) */}
           <View style={styles.avatarSection}>
             <View style={styles.avatarWrapper}>
               {previewUri ? (
@@ -115,7 +112,6 @@ const EditProfileScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Form Section giữ giao diện hiện đại (ô nhập liệu bo góc) */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Họ</Text>

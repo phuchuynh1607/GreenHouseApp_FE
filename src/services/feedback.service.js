@@ -37,7 +37,7 @@ export const sendMessageApi = async (ticketId, content) => {
 export const fetchTicketDetailsApi = async (ticketId) => {
   try {
     const response = await axiosClient.get(`/feedback/tickets/${ticketId}`);
-    return response.data; // Trả về object có mảng .messages bên trong
+    return response.data;
   } catch (error) {
     console.error(
       "Fetch ticket details error:",
@@ -61,9 +61,9 @@ export const updateTicketStatusApi = async (ticketId, newStatus) => {
   try {
     const response = await axiosClient.patch(
       `/feedback/tickets/${ticketId}/status`,
-      null, // Body để null nếu bạn gửi qua query parameter ở BE
+      null,
       {
-        params: { new_status: newStatus }, // Gửi new_status lên URL
+        params: { new_status: newStatus },
       },
     );
     return response.data;

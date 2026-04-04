@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Alert, // Thêm Alert để xác nhận đóng
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFeedback } from "../../hooks/useFeedback";
@@ -21,7 +21,7 @@ const FeedbackHistoryScreen = ({ navigation }) => {
     refreshTickets();
   }, []);
 
-  // --- CẬP NHẬT TRẠNG THÁI THẬT TỪ BACKEND ---
+  // --- CẬP NHẬT TRẠNG THÁI  ---
   const getStatusStyle = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":

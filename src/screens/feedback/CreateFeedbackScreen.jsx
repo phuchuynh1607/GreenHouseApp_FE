@@ -23,7 +23,6 @@ const CreateFeedback = ({ navigation }) => {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
-  // Sử dụng hook useFeedback
   const { createTicket, refreshTickets } = useFeedback();
 
   const handleSubmit = async () => {
@@ -35,10 +34,8 @@ const CreateFeedback = ({ navigation }) => {
 
     setLoading(true);
     try {
-      // Gọi createTicket từ context thay vì gọi trực tiếp API
       await createTicket(subject, message);
 
-      // Refresh lại danh sách tickets để cập nhật UI ở màn hình khác
       await refreshTickets();
 
       Alert.alert(

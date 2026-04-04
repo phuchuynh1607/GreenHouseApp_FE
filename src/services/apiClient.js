@@ -2,7 +2,7 @@ import axios from "axios";
 import { decode } from "base-64";
 import { tokenStorage } from "../tokenStorage/tokenStorage";
 
-const BASE_URL = "http://10.10.67.126:8000";
+const BASE_URL = "http://172.16.5.193:8000";
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -38,8 +38,6 @@ instance.interceptors.response.use(
         console.log("--- Interceptor đang thử Refresh Token ---");
 
         const refreshToken = await tokenStorage.getRefreshToken();
-
-        // GIỐNG LƯU Ý BẠN TÌM ĐƯỢC: Dùng 'axios' gốc (không dùng instance)
         const response = await axios.post(`${BASE_URL}/auth/refresh`, null, {
           params: { refresh_token: refreshToken },
         });
@@ -57,9 +55,8 @@ instance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return instance(originalRequest);
       } catch (refreshError) {
-        console.log("❌ Refresh Token thất bại:", refreshError);
+        console.log(" Refresh Token thất bại:", refreshError);
 
-        // Thay vì window.location, ta xóa token để AuthProvider đá user ra ngoài
         await tokenStorage.clearTokens();
         return Promise.reject(refreshError);
       }

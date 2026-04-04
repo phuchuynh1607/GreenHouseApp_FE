@@ -221,7 +221,6 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-// ... Styles giữ nguyên như cũ
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,

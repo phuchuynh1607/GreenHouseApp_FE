@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { useThreshold } from "../../hooks/useThreshold";
 import ThresholdCard from "../../components/ThresholdCard";
 
@@ -39,7 +39,7 @@ const ThresholdSettingScreen = ({ navigation }) => {
       unit: "%",
     },
   ];
-  const insets = useSafeAreaInsets();
+
   const { activeThresholds, updateThreshold, resetThreshold, loading } =
     useThreshold();
 

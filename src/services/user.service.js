@@ -2,12 +2,15 @@ import axios from "./apiClient";
 import { Platform } from "react-native";
 import axiosClient from "./apiClient";
 import { fetchUserProfile } from "./auth.service";
-// Lấy thông tin user (giữ nguyên tên để dùng cho đồng bộ)
+import { tokenStorage } from "../tokenStorage/tokenStorage";
 export const fetchUserInfo = fetchUserProfile;
 
 // Cập nhật thông tin
 export const updateUserInfo = async (updateData) => {
-  const response = await axios.put("/users/change_information", updateData);
+  const response = await axiosClient.put(
+    "/users/change_information",
+    updateData,
+  );
   return response.data;
 };
 
@@ -24,7 +27,7 @@ export const uploadAvatarApi = async (imageUri) => {
     name: filename || `avatar.${ext}`,
     type: type,
   });
-  const response = await axios.post("/users/upload/", formData, {
+  const response = await axiosClient.post("/users/upload/", formData, {
     headers: {
       Accept: "application/json",
     },
@@ -34,16 +37,13 @@ export const uploadAvatarApi = async (imageUri) => {
   return response.data;
 };
 
-// Đổi mật khẩu
 export const changePasswordApi = async (passwordData) => {
   try {
     const response = await axiosClient.put("/users/password", passwordData);
+    console.log("Response status:", response.status);
     return response.data;
   } catch (error) {
-    console.error(
-      "Change password error:",
-      error.response?.data || error.message,
-    );
+    console.error("Change password error details:");
     throw error;
   }
 };

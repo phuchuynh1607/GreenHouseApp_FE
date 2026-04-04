@@ -8,7 +8,7 @@ export const registerSchema = z
     last_name: z.string().min(1, "Last name is required"),
     phone_number: z
       .string()
-      .regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+      .regex(/^(0[3-9][0-9]{8})$/, "Phone number must be  10 digits"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
     role: z.string().default("user"),

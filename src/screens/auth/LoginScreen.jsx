@@ -53,6 +53,7 @@ const LoginScreen = ({ navigation }) => {
     };
     loadRememberedUser();
   }, [setValue]);
+
   const onSubmit = async (data) => {
     setServerError(null);
     try {
