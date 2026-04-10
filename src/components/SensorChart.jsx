@@ -1,40 +1,56 @@
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
 
-const SensorChart = ({ title, data, unit, color }) => {
-  // Nếu không có dữ liệu, tạo mảng rỗng hoặc dữ liệu mặc định để hiện trục
-  const chartData = {
-    labels: data?.labels || ["-", "-", "-", "-", "-"],
-    datasets: [
-      {
-        data: data?.values || [0, 0, 0, 0, 0], // Hiện trục 0 nếu chưa có số liệu
-        color: (opacity = 1) => color,
-      },
-    ],
-  };
+const screenWidth = Dimensions.get("window").width;
 
+const SensorChart = ({ title, unit, color, chartData }) => {
   return (
-    <View style={styles.chartWrapper}>
-      <Text style={styles.chartTitle}>
+    <View style={styles.chartContainer}>
+      <Text style={styles.chartLabel}>
         {title} ({unit})
       </Text>
+
       <LineChart
         data={chartData}
-        width={Dimensions.get("window").width - 40}
-        height={220}
+        width={screenWidth - 70} // Căn chỉnh dựa trên padding bên ngoài
+        height={250}
         chartConfig={{
           backgroundColor: "#fff",
           backgroundGradientFrom: "#fff",
           backgroundGradientTo: "#fff",
           decimalPlaces: 1,
           color: (opacity = 1) => color,
-          labelColor: (opacity = 1) => `#333`,
+          labelColor: (opacity = 1) => `#666`,
           style: { borderRadius: 16 },
-          propsForDots: { r: "4", strokeWidth: "2", stroke: color },
+          propsForDots: {
+            r: "3",
+            strokeWidth: "1",
+            stroke: color,
+          },
         }}
-        bezier // Đường cong mềm mại
-        style={{ marginVertical: 8, borderRadius: 16 }}
+        verticalLabelRotation={30}
+        bezier
+        style={styles.chartStyle}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  chartContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 15,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    marginBottom: 10,
+  },
+  chartLabel: { fontSize: 14, color: "#888", marginBottom: 10 },
+  chartStyle: { marginVertical: 8, borderRadius: 16 },
+});
+
+export default SensorChart;

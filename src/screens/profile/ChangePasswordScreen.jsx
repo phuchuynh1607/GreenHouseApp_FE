@@ -45,7 +45,6 @@ const ChangePasswordScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-      // Gọi API đổi mật khẩu
       await changePassword({
         password: data.password,
         new_password: data.newPassword,

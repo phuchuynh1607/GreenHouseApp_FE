@@ -53,7 +53,6 @@ const RegisterScreen = ({ navigation }) => {
 
   const strength = getStrengthConfig(passwordValue);
 
-  // Hàm chuyển bước có kiểm tra lỗi ngay lập tức
   const nextStep = async () => {
     const fieldsToValidate = [
       "first_name",

@@ -12,7 +12,7 @@ import { useIoT } from "../../hooks/useIoT";
 import DeviceControlCard from "../../components/DeviceControlCard";
 
 const DashboardScreen = ({ navigation }) => {
-  const { sensors, devices, loading, controlDevice } = useIoT();
+  const { sensors, devices, loading, deviceHelpers } = useIoT(); // ← dùng deviceHelpers
   const insets = useSafeAreaInsets();
 
   // Template cố định cho UI
@@ -25,7 +25,6 @@ const DashboardScreen = ({ navigation }) => {
     [],
   );
 
-  // Logic trộn dữ liệu BE và Template (Dùng useMemo để tối ưu)
   const displayDevices = useMemo(() => {
     return deviceTemplates.map((tpl) => {
       const serverData = devices.find(
@@ -35,10 +34,10 @@ const DashboardScreen = ({ navigation }) => {
         serverData || {
           ...tpl,
           mode: 0,
-          current_value: 0,
           manual_pwm: 128,
-          start_hour: 0,
-          end_hour: 23,
+          start_hour: -1,
+          end_hour: -1,
+          current_value: 0,
         }
       );
     });
@@ -119,7 +118,11 @@ const DashboardScreen = ({ navigation }) => {
             key={device.device_index}
             device={device}
             template={deviceTemplates[device.device_index]}
-            onControl={controlDevice}
+            onControl={deviceHelpers.changeMode}
+            onPWMChange={deviceHelpers.changePWM}
+            onTurnOff={deviceHelpers.turnOff}
+            onTurnOnManual={deviceHelpers.turnOnManual}
+            onTurnOnAuto={deviceHelpers.turnOnAuto}
           />
         ))}
       </ScrollView>

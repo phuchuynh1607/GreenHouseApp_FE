@@ -29,7 +29,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUri, setPreviewUri] = useState(null);
 
-  const BASE_URL = "http://172.16.5.193:8000";
+  const BASE_URL = "http://10.10.93.246:8000";
 
   useEffect(() => {
     if (profile) {

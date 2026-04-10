@@ -5,8 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Switch,
-  TextInput,
+  KeyboardAvoidingView,
+  Platform,
   Alert,
   ActivityIndicator,
 } from "react-native";
@@ -125,35 +125,40 @@ const ThresholdSettingScreen = ({ navigation }) => {
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.description}>
-          Hệ thống sẽ gửi thông báo khi các thông số vượt ra khỏi khoảng an toàn
-          mà bạn thiết lập.
-        </Text>
-
-        {/* 3. Hiển thị 3 Card tương ứng với BE */}
-        {sensors.map((sensor) => (
-          <ThresholdCard
-            key={sensor.type}
-            {...sensor}
-            value={localThresholds[sensor.type]}
-            onChange={handleChange}
-            onSave={handleSave}
-            onReset={resetThreshold}
-          />
-        ))}
-        <View style={styles.infoBox}>
-          <Ionicons
-            name="information-circle-outline"
-            size={20}
-            color="#6B7280"
-          />
-          <Text style={styles.infoText}>
-            Giá trị mặc định được thiết lập bởi Admin dựa trên tiêu chuẩn của hệ
-            thống.
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.description}>
+            Hệ thống sẽ gửi thông báo khi các thông số vượt ra khỏi khoảng an
+            toàn mà bạn thiết lập.
           </Text>
-        </View>
-      </ScrollView>
+
+          {/* 3. Hiển thị 3 Card tương ứng với BE */}
+          {sensors.map((sensor) => (
+            <ThresholdCard
+              key={sensor.type}
+              {...sensor}
+              value={localThresholds[sensor.type]}
+              onChange={handleChange}
+              onSave={handleSave}
+              onReset={resetThreshold}
+            />
+          ))}
+          <View style={styles.infoBox}>
+            <Ionicons
+              name="information-circle-outline"
+              size={20}
+              color="#6B7280"
+            />
+            <Text style={styles.infoText}>
+              Giá trị mặc định được thiết lập bởi Admin dựa trên tiêu chuẩn của
+              hệ thống.
+            </Text>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {loading && (
         <View style={styles.loadingOverlay}>

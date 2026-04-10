@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useThreshold } from "../../hooks/useThreshold";
@@ -122,30 +124,39 @@ const SystemThresholdScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.description}>
-          Thiết lập giá trị mặc định cho toàn bộ hệ thống. Các thay đổi này sẽ
-          áp dụng trực tiếp cho những người dùng sử dụng cấu hình mặc định.
-        </Text>
-
-        {sensors.map((sensor) => (
-          <ThresholdCard
-            key={sensor.type}
-            {...sensor}
-            value={localThresholds[sensor.type]}
-            onChange={handleChange}
-            onSave={handleSave}
-          />
-        ))}
-
-        <View style={styles.infoBox}>
-          <Ionicons name="shield-checkmark-outline" size={20} color="#6B7280" />
-          <Text style={styles.infoText}>
-            Lưu ý: Bạn đang chỉnh sửa dữ liệu ở cấp độ cao nhất. Hãy kiểm tra kỹ
-            các thông số trước khi cập nhật.
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Text style={styles.description}>
+            Thiết lập giá trị mặc định cho toàn bộ hệ thống. Các thay đổi này sẽ
+            áp dụng trực tiếp cho những người dùng sử dụng cấu hình mặc định.
           </Text>
-        </View>
-      </ScrollView>
+
+          {sensors.map((sensor) => (
+            <ThresholdCard
+              key={sensor.type}
+              {...sensor}
+              value={localThresholds[sensor.type]}
+              onChange={handleChange}
+              onSave={handleSave}
+            />
+          ))}
+
+          <View style={styles.infoBox}>
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={20}
+              color="#6B7280"
+            />
+            <Text style={styles.infoText}>
+              Lưu ý: Bạn đang chỉnh sửa dữ liệu ở cấp độ cao nhất. Hãy kiểm tra
+              kỹ các thông số trước khi cập nhật.
+            </Text>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {loading && (
         <View style={styles.loadingOverlay}>
