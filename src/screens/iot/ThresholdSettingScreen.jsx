@@ -126,8 +126,8 @@ const ThresholdSettingScreen = ({ navigation }) => {
       </View>
 
       <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: "#fff" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.description}>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingTop: 45,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   scrollContent: { padding: 20 },

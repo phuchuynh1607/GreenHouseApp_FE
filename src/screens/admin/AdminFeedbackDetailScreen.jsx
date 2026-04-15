@@ -159,7 +159,10 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
         </View>
       )}
 
-      <KeyboardAvoidingView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         {loading && !currentTicket ? (
           <ActivityIndicator style={{ flex: 1 }} color="#1F2937" />
         ) : (

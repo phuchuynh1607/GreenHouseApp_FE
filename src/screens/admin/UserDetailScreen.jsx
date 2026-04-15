@@ -16,7 +16,7 @@ const UserDetailScreen = ({ route, navigation }) => {
   const { userId } = route.params;
   const { selectedUserDetail, loading, getUserDetail, deleteUser } = useAdmin();
 
-  const BASE_URL = "http://10.10.93.246:8000";
+  const BASE_URL = "https://greenhouse-backend-6hky.onrender.com";
 
   useEffect(() => {
     if (userId) {
@@ -48,7 +48,6 @@ const UserDetailScreen = ({ route, navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Avatar Section - Bự hơn theo ý bạn */}
         <View style={styles.avatarSection}>
           <View style={styles.avatarWrapper}>
             {selectedUserDetail?.user_image ? (
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   avatarSection: { alignItems: "center", marginTop: 40, marginBottom: 30 },

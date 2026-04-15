@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#2f6b3f", // Indigo-700 giống web
+    color: "#2f6b3f",
     marginBottom: 5,
     fontWeight: "bold",
   },
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
     color: "#2f6b3f",
   },
   inputDefault: {
-    borderBottomColor: "#6366F1", // Indigo-500
+    borderBottomColor: "#6366F1",
   },
   inputError: {
-    borderBottomColor: "#EF4444", // Red-500
+    borderBottomColor: "#EF4444",
   },
   errorText: {
     color: "#EF4444",

@@ -13,7 +13,6 @@ import moment from "moment";
 import { useIoT } from "../../hooks/useIoT";
 
 const NotificationHistoryScreen = ({ navigation }) => {
-  // Sử dụng hook useIoT để lấy dữ liệu từ Provider
   const { notifications, loading, refreshNotificationData } = useIoT();
 
   const sensorConfigs = {
@@ -85,10 +84,9 @@ const NotificationHistoryScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Hiển thị Loading khi lần đầu vào trang mà chưa có data */}
       {loading && notifications.length === 0 ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#429257" />
+          <ActivityIndicator size="large" color="#2f6b3f" />
         </View>
       ) : (
         <FlatList
@@ -97,7 +95,7 @@ const NotificationHistoryScreen = ({ navigation }) => {
           renderItem={renderItem}
           contentContainerStyle={styles.listContent}
           refreshing={loading}
-          onRefresh={refreshNotificationData} // Kéo để cập nhật
+          onRefresh={refreshNotificationData}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Ionicons
@@ -124,7 +122,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   listContent: { padding: 16 },

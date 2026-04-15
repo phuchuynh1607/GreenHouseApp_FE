@@ -29,7 +29,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUri, setPreviewUri] = useState(null);
 
-  const BASE_URL = "http://10.10.93.246:8000";
+  const BASE_URL = "https://greenhouse-backend-6hky.onrender.com";
 
   useEffect(() => {
     if (profile) {
@@ -38,7 +38,7 @@ const EditProfileScreen = ({ navigation }) => {
         last_name: profile.last_name || "",
         phone_number: profile.phone_number || "",
       });
-      // LOGIC XỬ LÝ ẢNH TỪ FILE CŨ: Ưu tiên ảnh profile từ server
+
       if (profile.user_image) {
         setPreviewUri(`${BASE_URL}/${profile.user_image}`);
       }
@@ -47,7 +47,6 @@ const EditProfileScreen = ({ navigation }) => {
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      // Thay đổi dòng này
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
@@ -57,7 +56,7 @@ const EditProfileScreen = ({ navigation }) => {
     if (!result.canceled) {
       const uri = result.assets[0].uri;
       setSelectedImage(uri);
-      setPreviewUri(uri); // Cập nhật preview bằng ảnh vừa chọn từ máy
+      setPreviewUri(uri);
     }
   };
 
@@ -73,7 +72,10 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[styles.container]}>
           {/* Header giữ giao diện hiện đại */}
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   saveBtnText: { fontSize: 16, fontWeight: "bold", color: "#fff" },

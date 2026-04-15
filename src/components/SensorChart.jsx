@@ -13,7 +13,7 @@ const SensorChart = ({ title, unit, color, chartData }) => {
 
       <LineChart
         data={chartData}
-        width={screenWidth - 70} // Căn chỉnh dựa trên padding bên ngoài
+        width={screenWidth - 70}
         height={250}
         chartConfig={{
           backgroundColor: "#fff",

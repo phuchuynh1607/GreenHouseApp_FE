@@ -30,9 +30,6 @@ const SensorHistoryScreen = ({ route, navigation }) => {
         datasets: [{ data: [0] }],
       };
     }
-
-    // Lấy nhãn thời gian (ví dụ: "14:30")
-    // Chỉ hiển thị nhãn cách quãng để tránh đè chữ trên trục X
     const labels = history.map((item, index) => {
       if (history.length > 6) {
         return index % Math.floor(history.length / 5) === 0
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 45,
     padding: 20,
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   content: { padding: 20 },

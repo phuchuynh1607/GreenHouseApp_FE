@@ -92,7 +92,6 @@ const FeedbackHistoryScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Nút đóng nhanh - Chỉ hiện nếu chưa Closed */}
           {!isClosed && (
             <TouchableOpacity
               onPress={() => handleCloseTicket(item.id)}
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   listContent: { padding: 16 },

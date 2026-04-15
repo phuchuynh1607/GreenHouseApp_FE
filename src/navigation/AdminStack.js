@@ -19,7 +19,7 @@ const AdminStack = () => {
       initialRouteName="AdminMain"
       screenOptions={{
         headerShown: false,
-        animation: "slide_from_right", // Hiệu ứng mượt mà khi chuyển màn hình
+        animation: "slide_from_right",
       }}
     >
       {/* 1. Màn hình Dashboard trung tâm của Admin */}

@@ -43,7 +43,7 @@ export const ThresholdProvider = ({ children }) => {
   const resetThreshold = async (sensorType) => {
     try {
       await resetToDefaultApi(sensorType);
-      await getThresholds(); // Refresh lại để lấy giá trị Admin
+      await getThresholds();
     } catch (err) {
       console.error("Lỗi reset ngưỡng:", err);
       throw err;
@@ -66,13 +66,10 @@ export const ThresholdProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Cập nhật ngưỡng mặc định hệ thống
   const updateAdminDefault = async (sensorType, min, max) => {
     try {
       await setAdminThresholdApi(sensorType, min, max);
-      await getAdminDefaults(); // Cập nhật lại list admin
-      // Lưu ý: Sau khi admin đổi default, active thresholds của user
-      // (những người chưa set riêng) cũng sẽ thay đổi theo.
+      await getAdminDefaults();
       await getThresholds();
     } catch (err) {
       console.error("Lỗi cập nhật ngưỡng hệ thống:", err);
@@ -80,7 +77,6 @@ export const ThresholdProvider = ({ children }) => {
     }
   };
 
-  // Tự động load dữ liệu tùy theo vai trò
   useEffect(() => {
     getThresholds();
     if (user?.role === "admin") {
@@ -92,7 +88,7 @@ export const ThresholdProvider = ({ children }) => {
       value={{
         // Data & Loading
         activeThresholds,
-        adminDefaults, // Trả ra cho Admin Screen dùng
+        adminDefaults,
         loading,
 
         // User Actions
@@ -101,7 +97,7 @@ export const ThresholdProvider = ({ children }) => {
         refreshThresholds: getThresholds,
 
         // Admin Actions
-        updateAdminDefault, // Trả ra cho Admin Screen dùng
+        updateAdminDefault,
         refreshAdminDefaults: getAdminDefaults,
       }}
     >

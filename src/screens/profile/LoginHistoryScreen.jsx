@@ -10,20 +10,18 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUserProfile } from "../../hooks/useUserProfile";
-import dayjs from "dayjs"; // Nên dùng để format thời gian cho đẹp
+import dayjs from "dayjs";
 import { useEffect } from "react";
 const LoginHistoryScreen = ({ navigation }) => {
   const { loginHistory, loading, refreshProfile } = useUserProfile();
   const insets = useSafeAreaInsets();
 
-  // Tự động làm mới dữ liệu khi mở màn hình
   useEffect(() => {
     if (refreshProfile) {
       refreshProfile();
     }
   }, []);
 
-  // Hàm format thiết bị an toàn (Sửa lỗi .includes)
   const formatDevice = (deviceInfo) => {
     if (!deviceInfo) return "Thiết bị không xác định";
     const ua = String(deviceInfo);
@@ -96,7 +94,7 @@ const LoginHistoryScreen = ({ navigation }) => {
         </View>
       ) : (
         <FlatList
-          data={loginHistory || []} // Đảm bảo luôn là mảng, không bị undefined
+          data={loginHistory || []}
           keyExtractor={(item, index) =>
             item?.id ? item.id.toString() : index.toString()
           }
@@ -138,7 +136,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
 

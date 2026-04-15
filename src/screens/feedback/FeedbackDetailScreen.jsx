@@ -114,7 +114,10 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
       </View>
 
       {/* Chat List */}
-      <KeyboardAvoidingView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: "#fff" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         {loading && !currentTicket ? (
           <ActivityIndicator style={{ flex: 1 }} color="#2f6b3f" />
         ) : (
@@ -128,7 +131,6 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
           />
         )}
 
-        {/* Input Area or Closed Message */}
         {currentTicket?.status === "closed" ? (
           <View
             style={[styles.closedArea, { paddingBottom: insets.bottom + 20 }]}
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerInfo: { flex: 1, marginLeft: 15 },
   headerTitle: { fontSize: 16, fontWeight: "bold", color: "#fff" },
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,

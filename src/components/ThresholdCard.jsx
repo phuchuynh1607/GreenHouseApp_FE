@@ -51,7 +51,6 @@ const ThresholdCard = ({
       </View>
 
       <View style={styles.cardActions}>
-        {/* Chỉ hiển thị nút reset nếu prop onReset tồn tại */}
         {onReset ? (
           <TouchableOpacity
             style={styles.resetBtn}
@@ -60,7 +59,7 @@ const ThresholdCard = ({
             <Text style={styles.resetBtnText}>Đặt lại mặc định</Text>
           </TouchableOpacity>
         ) : (
-          <View /> // Hoặc để trống để giữ Layout
+          <View />
         )}
 
         <TouchableOpacity

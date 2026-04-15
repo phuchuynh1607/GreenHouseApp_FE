@@ -2,7 +2,7 @@ import axios from "axios";
 import { decode } from "base-64";
 import { tokenStorage } from "../tokenStorage/tokenStorage";
 
-const BASE_URL = "http://10.10.93.246:8000";
+const BASE_URL = "https://greenhouse-backend-6hky.onrender.com";
 
 const instance = axios.create({
   baseURL: BASE_URL,

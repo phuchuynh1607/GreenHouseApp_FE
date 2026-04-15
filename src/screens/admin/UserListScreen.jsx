@@ -16,7 +16,7 @@ import { useAdmin } from "../../hooks/useAdmin";
 const UsersListScreen = ({ navigation }) => {
   const { users, loading, refreshUsers } = useAdmin();
   const [searchQuery, setSearchQuery] = useState("");
-  const BASE_URL = "http://10.10.93.246:8000";
+  const BASE_URL = "https://greenhouse-backend-6hky.onrender.com";
 
   const filteredUsers = useMemo(() => {
     return users.filter(
@@ -59,7 +59,6 @@ const UsersListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Search Section với Nút Back */}
       <View style={styles.searchSection}>
         <View style={styles.headerRow}>
           <TouchableOpacity
@@ -123,7 +122,7 @@ const UsersListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9FAFB" },
   searchSection: {
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
     paddingTop: 45,
     padding: 30,
     borderBottomLeftRadius: 20,

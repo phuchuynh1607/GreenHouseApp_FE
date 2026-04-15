@@ -56,7 +56,10 @@ const CreateFeedback = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[styles.container]}>
           {/* Header */}
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   title: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   backButton: { padding: 4 },

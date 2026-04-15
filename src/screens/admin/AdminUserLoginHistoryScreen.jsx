@@ -8,14 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAdmin } from "../../hooks/useAdmin"; // Dùng hook Admin
+import { useAdmin } from "../../hooks/useAdmin";
 import dayjs from "dayjs";
 
 const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
-  const { userId } = route.params; // Nhận ID từ màn hình Detail truyền sang
+  const { userId } = route.params;
   const { selectedUserHistory, loading, getUserDetail } = useAdmin();
 
-  // Gọi lại API của Admin để lấy lịch sử của user này
   useEffect(() => {
     if (userId) {
       getUserDetail(userId);
@@ -83,7 +82,6 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header màu đặc trưng của Admin hoặc giữ nguyên xanh lá của bạn */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

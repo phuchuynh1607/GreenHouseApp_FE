@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
     minHeight: 48,
   },
   primary: {
-    backgroundColor: "#3c7726", // Indigo-500
+    backgroundColor: "#3c7726",
   },
   login_register: {
-    backgroundColor: "#2f6b3f", // Indigo-700
+    backgroundColor: "#2f6b3f",
     borderRadius: 25,
   },
   outline: {

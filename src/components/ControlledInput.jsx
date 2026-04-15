@@ -16,7 +16,6 @@ const ControlledInput = ({
   secureTextEntry,
   ...textInputProps
 }) => {
-  // Chỉ dùng state cho con mắt nếu trường này là password
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
@@ -36,7 +35,6 @@ const ControlledInput = ({
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              // Logic ẩn/hiện dựa trên secureTextEntry và state passwordVisible
               secureTextEntry={secureTextEntry && !passwordVisible}
               {...textInputProps}
             />

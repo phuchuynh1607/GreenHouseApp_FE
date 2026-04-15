@@ -5,6 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,7 +14,7 @@ import { useIoT } from "../../hooks/useIoT";
 import DeviceControlCard from "../../components/DeviceControlCard";
 
 const DashboardScreen = ({ navigation }) => {
-  const { sensors, devices, loading, deviceHelpers } = useIoT(); // ← dùng deviceHelpers
+  const { sensors, devices, loading, deviceHelpers } = useIoT();
   const insets = useSafeAreaInsets();
 
   // Template cố định cho UI
@@ -44,89 +46,95 @@ const DashboardScreen = ({ navigation }) => {
   }, [devices, deviceTemplates]);
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header]}>
-        <View style={styles.headerSide} />
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={[styles.header]}>
+          <View style={styles.headerSide} />
 
-        <View style={styles.centerTitle}>
-          <Text style={styles.statusText}>
-            {loading ? "Loading..." : "GreenHouse App"}
-          </Text>
+          <View style={styles.centerTitle}>
+            <Text style={styles.statusText}>
+              {loading ? "Loading..." : "GreenHouse App"}
+            </Text>
+          </View>
+          <View style={styles.headerSide}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ThresholdSettings")}
+              style={styles.headerBtn}
+            >
+              <Ionicons name="options-outline" size={22} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.headerSide}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ThresholdSettings")}
-            style={styles.headerBtn}
-          >
-            <Ionicons name="options-outline" size={22} color="#fff" />
-          </TouchableOpacity>
-        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          automaticallyAdjustKeyboardInsets={true}
+        >
+          <Text style={styles.sectionTitle}>Thông số thực tế</Text>
+          <View style={styles.sensorGrid}>
+            <SensorCard
+              title="Nhiệt độ"
+              value={sensors?.temp}
+              unit="°C"
+              icon="thermometer"
+              color="#FF6B6B"
+              onPress={() =>
+                navigation.navigate("SensorHistory", { type: "temp" })
+              }
+            />
+            <SensorCard
+              title="Ánh sáng"
+              value={sensors?.light}
+              unit="%"
+              icon="brightness-6"
+              color="#FFD93D"
+              onPress={() =>
+                navigation.navigate("SensorHistory", { type: "light" })
+              }
+            />
+            <SensorCard
+              title="Ẩm đất"
+              value={sensors?.soil}
+              unit="%"
+              icon="water-percent"
+              color="#4D96FF"
+              onPress={() =>
+                navigation.navigate("SensorHistory", { type: "soil" })
+              }
+            />
+            <SensorCard
+              title="Ẩm khí"
+              value={sensors?.humi}
+              unit="%"
+              icon="cloud-outline"
+              color="#6BCB77"
+              onPress={() =>
+                navigation.navigate("SensorHistory", { type: "humi" })
+              }
+            />
+          </View>
+
+          <Text style={styles.sectionTitle}>Thiết bị hệ thống</Text>
+          {displayDevices.map((device) => (
+            <DeviceControlCard
+              key={device.device_index}
+              device={device}
+              template={deviceTemplates[device.device_index]}
+              onControl={deviceHelpers.changeMode}
+              onPWMChange={deviceHelpers.changePWM}
+              onTurnOff={deviceHelpers.turnOff}
+              onTurnOnManual={deviceHelpers.turnOnManual}
+              onTurnOnAuto={deviceHelpers.turnOnAuto}
+            />
+          ))}
+        </ScrollView>
       </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <Text style={styles.sectionTitle}>Thông số thực tế</Text>
-        <View style={styles.sensorGrid}>
-          <SensorCard
-            title="Nhiệt độ"
-            value={sensors?.temp}
-            unit="°C"
-            icon="thermometer"
-            color="#FF6B6B"
-            onPress={() =>
-              navigation.navigate("SensorHistory", { type: "temp" })
-            }
-          />
-          <SensorCard
-            title="Ánh sáng"
-            value={sensors?.light}
-            unit="%"
-            icon="brightness-6"
-            color="#FFD93D"
-            onPress={() =>
-              navigation.navigate("SensorHistory", { type: "light" })
-            }
-          />
-          <SensorCard
-            title="Ẩm đất"
-            value={sensors?.soil}
-            unit="%"
-            icon="water-percent"
-            color="#4D96FF"
-            onPress={() =>
-              navigation.navigate("SensorHistory", { type: "soil" })
-            }
-          />
-          <SensorCard
-            title="Ẩm khí"
-            value={sensors?.humi}
-            unit="%"
-            icon="cloud-outline"
-            color="#6BCB77"
-            onPress={() =>
-              navigation.navigate("SensorHistory", { type: "humi" })
-            }
-          />
-        </View>
-
-        <Text style={styles.sectionTitle}>Thiết bị hệ thống</Text>
-        {displayDevices.map((device) => (
-          <DeviceControlCard
-            key={device.device_index}
-            device={device}
-            template={deviceTemplates[device.device_index]}
-            onControl={deviceHelpers.changeMode}
-            onPWMChange={deviceHelpers.changePWM}
-            onTurnOff={deviceHelpers.turnOff}
-            onTurnOnManual={deviceHelpers.turnOnManual}
-            onTurnOnAuto={deviceHelpers.turnOnAuto}
-          />
-        ))}
-      </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -161,7 +169,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerSide: {
     width: 45,

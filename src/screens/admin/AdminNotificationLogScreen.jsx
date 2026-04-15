@@ -53,12 +53,11 @@ const AdminNotificationLogScreen = ({ navigation }) => {
 
         <View style={styles.content}>
           <View style={styles.topRow}>
-            {/* Tag hiển thị User - Quan trọng nhất cho Admin */}
             <View style={styles.userTag}>
               <Ionicons
                 name="person-circle-outline"
                 size={12}
-                color="#429257"
+                color="#2f6b3f"
               />
               <Text style={styles.userName}>
                 {item.username || `User #${item.user_id}`}
@@ -97,7 +96,7 @@ const AdminNotificationLogScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.backBtn}
         >
-          <Ionicons name="chevron-back" size={26} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
 
         <View style={styles.headerTitleContainer}>
@@ -128,7 +127,7 @@ const AdminNotificationLogScreen = ({ navigation }) => {
           <RefreshControl
             refreshing={loading}
             onRefresh={refreshNotificationData}
-            tintColor="#429257"
+            tintColor="#2f6b3f"
           />
         }
         ListEmptyComponent={
@@ -151,13 +150,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 45,
     padding: 30,
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
   },
-  headerTitleContainer: { flex: 1, marginLeft: 10 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
-  headerSub: { fontSize: 12, color: "#9CA3AF" },
+  headerTitleContainer: { flex: 1, marginLeft: 20 },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 4,
+  },
+  headerSub: { fontSize: 12, color: "#676c74" },
   listContent: { padding: 16 },
   card: {
     flexDirection: "row",
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 11,
     fontWeight: "700",
-    color: "#429257",
+    color: "#2f6b3f",
     marginLeft: 4,
   },
   time: { fontSize: 11, color: "#9CA3AF" },

@@ -22,7 +22,6 @@ export const FeedbackProvider = ({ children }) => {
     setLoading(true);
     try {
       let data;
-      // Nếu là admin, gọi API lấy tất cả. Nếu là user, lấy của chính mình.
       if (user.role === "admin") {
         data = await fetchAllTicketsAdminApi();
       } else {
@@ -51,7 +50,7 @@ export const FeedbackProvider = ({ children }) => {
   const handleCreateTicket = async (subject, message) => {
     try {
       const newTicket = await createTicketApi(subject, message);
-      await getMyTickets(); // Cập nhật lại danh sách bên ngoài
+      await getMyTickets();
       return newTicket;
     } catch (err) {
       throw err;
@@ -72,12 +71,7 @@ export const FeedbackProvider = ({ children }) => {
   const updateTicketStatus = async (ticketId, newStatus) => {
     try {
       await updateTicketStatusApi(ticketId, newStatus);
-
-      // Sau khi cập nhật trạng thái thành công:
-      // - Cập nhật lại danh sách ticket bên ngoài
       await getMyTickets();
-
-      // - Nếu đang xem chi tiết chính ticket đó, cập nhật lại để UI thay đổi (ẩn nút gửi tin nhắn chẳng hạn)
       if (currentTicket && currentTicket.id === ticketId) {
         await getTicketDetails(ticketId);
       }

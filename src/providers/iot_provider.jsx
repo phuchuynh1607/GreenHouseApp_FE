@@ -31,7 +31,6 @@ export const IotProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Refs
   const lastManualAction = useRef(0);
   const refreshFastDataRef = useRef();
   const refreshNotificationRef = useRef();
@@ -40,7 +39,6 @@ export const IotProvider = ({ children }) => {
 
   // 1. Hàm lấy dữ liệu (Cảm biến + Thiết bị)
   const refreshFastData = useCallback(async () => {
-    // CHẶN TẠI ĐÂY: Nếu không có user hoặc user là admin thì không làm gì cả
     if (!user || user.role === "admin") return;
     if (!isPolling) return;
 
@@ -84,7 +82,6 @@ export const IotProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Hàm gọi API mark-all-as-read
   const handleMarkAsRead = async () => {
     try {
       await markAllNotificationsAsReadApi();
@@ -101,104 +98,233 @@ export const IotProvider = ({ children }) => {
    */
   const controlDevice = useCallback(
     async (deviceIndex, settings) => {
-      // Validate dữ liệu trước khi gửi
+      const currentDevice = devices.find((d) => d.device_index === deviceIndex);
+      if (!currentDevice) {
+        console.error("Device not found:", deviceIndex);
+        return Promise.reject(new Error("Device not found"));
+      }
+      let normalizedStartHour = -1;
+      let normalizedEndHour = -1;
+
+      if (settings.start_hour !== undefined) {
+        normalizedStartHour = settings.start_hour;
+      } else {
+        normalizedStartHour = currentDevice.start_hour ?? -1;
+      }
+
+      if (settings.end_hour !== undefined) {
+        normalizedEndHour = settings.end_hour;
+      } else {
+        normalizedEndHour = currentDevice.end_hour ?? -1;
+      }
+
+      if (normalizedStartHour === null || normalizedStartHour === undefined)
+        normalizedStartHour = -1;
+      if (normalizedEndHour === null || normalizedEndHour === undefined)
+        normalizedEndHour = -1;
+
+      // 1. Kiểm tra logic cho chế độ AUTO (Mode 1)
+      const targetMode =
+        settings.mode !== undefined ? settings.mode : currentDevice.mode;
+
+      if (targetMode === 1) {
+        const isAllDay = normalizedStartHour === -1 && normalizedEndHour === -1;
+        const isValidRange =
+          normalizedStartHour >= 0 &&
+          normalizedStartHour <= 23 &&
+          normalizedEndHour >= 0 &&
+          normalizedEndHour <= 23 &&
+          normalizedStartHour !== normalizedEndHour;
+
+        if (!isAllDay && !isValidRange) {
+          const error = new Error(
+            "Chế độ Tự động yêu cầu: Cả hai giờ là -1 (24/7) HOẶC khung giờ 0-23h hợp lệ (start != end)",
+          );
+          error.validationError = true;
+          throw error;
+        }
+
+        console.log(" AUTO mode validated:", {
+          isAllDay,
+          isValidRange,
+          start: normalizedStartHour,
+          end: normalizedEndHour,
+        });
+      }
+
+      // 2. Chặn trường hợp "lẻ" (-1 và một số khác -1) để khớp logic Backend
       if (
-        settings.mode === 1 &&
-        (settings.start_hour === undefined || settings.end_hour === undefined)
+        (normalizedStartHour === -1 && normalizedEndHour !== -1) ||
+        (normalizedStartHour !== -1 && normalizedEndHour === -1)
       ) {
-        const error = new Error("AUTO mode requires start_hour and end_hour");
+        const error = new Error(
+          "Hẹn giờ phải đặt cả hai là -1 (tắt hẹn giờ) hoặc cả hai trong khoảng 0-23h (bật hẹn giờ)",
+        );
         error.validationError = true;
         throw error;
       }
 
+      // 3. Validate dải giá trị PWM
       if (
-        settings.start_hour !== undefined &&
-        settings.end_hour !== undefined
+        settings.manual_pwm !== undefined &&
+        (settings.manual_pwm < 0 || settings.manual_pwm > 255)
       ) {
-        if (settings.start_hour === settings.end_hour) {
-          const error = new Error("Start hour and end hour cannot be the same");
-          error.validationError = true;
-          throw error;
-        }
-        if (
-          settings.start_hour < 0 ||
-          settings.start_hour > 23 ||
-          settings.end_hour < 0 ||
-          settings.end_hour > 23
-        ) {
-          const error = new Error("Hours must be between 0 and 23");
-          error.validationError = true;
-          throw error;
-        }
+        const error = new Error("Giá trị PWM phải nằm trong khoảng 0-255");
+        error.validationError = true;
+        throw error;
       }
 
-      lastManualAction.current = Date.now();
+      // 4. ✅ THÊM: Xử lý đặc biệt khi chuyển mode
+      // Nếu chuyển từ AUTO sang MANUAL, cần đảm bảo timer không còn ảnh hưởng
+      if (
+        targetMode === 2 &&
+        currentDevice.mode === 1 &&
+        settings.start_hour === undefined &&
+        settings.end_hour === undefined
+      ) {
+        // Giữ nguyên timer cũ nhưng backend sẽ xử lý
+        console.log(" Switching from AUTO to MANUAL, keeping existing timer:", {
+          normalizedStartHour,
+          normalizedEndHour,
+        });
+      }
 
-      // Lưu lại state cũ để rollback nếu cần
+      // ========== TẠO REQUEST BODY CUỐI CÙNG ==========
+      const finalSettings = {
+        ...settings,
+        start_hour: normalizedStartHour,
+        end_hour: normalizedEndHour,
+      };
+
+      // Log để debug
+      console.log("📤 Control device request:", {
+        deviceIndex,
+        targetMode,
+        originalSettings: settings,
+        finalSettings,
+      });
+
+      // ========== THỰC THI (Optimistic Update) ==========
+      lastManualAction.current = Date.now();
       const oldDevices = [...devices];
 
-      // 1. Optimistic UI update: Cập nhật ngay lập tức cho mượt
+      // Optimistic update
       setDevices((prev) =>
         prev.map((d) =>
-          d.device_index === deviceIndex ? { ...d, ...settings } : d,
+          d.device_index === deviceIndex
+            ? {
+                ...d,
+                ...finalSettings,
+                // Đảm bảo timer được cập nhật đúng
+                start_hour: normalizedStartHour,
+                end_hour: normalizedEndHour,
+              }
+            : d,
         ),
       );
+
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      // Trả về Promise để Screen có thể dùng await hiển thị Loading/Alert
+
       return new Promise((resolve, reject) => {
         debounceTimer.current = setTimeout(async () => {
           try {
-            const response = await updateDeviceSettings(deviceIndex, settings);
-            if (settings.mode !== undefined) {
-              const freshDevices = await fetchAllDevices();
-              setDevices(freshDevices);
-            }
+            const response = await updateDeviceSettings(
+              deviceIndex,
+              finalSettings,
+            );
 
+            // Đồng bộ lại dữ liệu chuẩn từ server
+            const freshDevices = await fetchAllDevices();
+            setDevices(freshDevices);
+
+            console.log("✅ Control device success:", response);
             resolve(response);
           } catch (err) {
-            console.error("Lỗi điều khiển thiết bị:", err.message);
-
-            // Rollback: Khôi phục state cũ
-            setDevices(oldDevices);
-
-            // Nên throw lỗi chi tiết hơn
-            const error = new Error(
-              err.response?.data?.detail ||
-                err.message ||
-                "Không thể điều khiển thiết bị",
+            console.error(
+              "❌ Control device error:",
+              err.response?.data || err.message,
             );
+            setDevices(oldDevices); // Rollback nếu lỗi API
+
+            const errorMessage =
+              err.response?.data?.detail ||
+              err.message ||
+              "Lỗi điều khiển thiết bị";
+            const error = new Error(errorMessage);
             error.statusCode = err.response?.status;
             reject(error);
           }
         }, 500);
       });
     },
-    [devices, fetchAllDevices],
+    [devices],
   );
 
-  // Các hàm tiện ích (wrap handleControlDevice)
   const deviceHelpers = {
-    changeMode: (deviceIndex, mode, start_hour = null, end_hour = null) =>
-      controlDevice(deviceIndex, { mode, start_hour, end_hour }),
+    // 1. Thay đổi Mode (tự động giữ timer cũ nếu không truyền timer mới)
+    changeMode: (deviceIndex, mode, start_hour = null, end_hour = null) => {
+      const settings = { mode };
+      if (start_hour !== null && end_hour !== null) {
+        settings.start_hour = start_hour;
+        settings.end_hour = end_hour;
+      }
+      return controlDevice(deviceIndex, settings);
+    },
 
+    // 2. Chỉ cập nhật tốc độ PWM
     changePWM: (deviceIndex, manual_pwm) =>
       controlDevice(deviceIndex, { manual_pwm }),
 
-    updateTimer: (deviceIndex, start_hour, end_hour) =>
-      controlDevice(deviceIndex, { start_hour, end_hour }),
+    // 3. Cập nhật Hẹn giờ (gửi -1 để chạy 24/7 hoặc tắt hẹn giờ)
+    updateTimer: (deviceIndex, start_hour, end_hour) => {
+      // Sử dụng ?? để xử lý null/undefined
+      const finalStart = start_hour ?? -1;
+      const finalEnd = end_hour ?? -1;
 
+      return controlDevice(deviceIndex, {
+        start_hour: finalStart,
+        end_hour: finalEnd,
+      });
+    },
+
+    // 4. Tắt thiết bị nhanh
     turnOff: (deviceIndex) => controlDevice(deviceIndex, { mode: 0 }),
 
-    turnOnManual: (deviceIndex, manual_pwm = 128) =>
-      controlDevice(deviceIndex, { mode: 2, manual_pwm }),
-
-    turnOnAuto: (deviceIndex, start_hour, end_hour, manual_pwm = 128) =>
-      controlDevice(deviceIndex, {
-        mode: 1,
-        start_hour,
-        end_hour,
+    // 5. Bật thủ công (Reset timer về -1 để tránh bị tắt theo lịch cũ)
+    turnOnManual: (deviceIndex, manual_pwm = 128) => {
+      return controlDevice(deviceIndex, {
+        mode: 2,
         manual_pwm,
-      }),
+        start_hour: -1, // Reset timer
+        end_hour: -1, // Reset timer
+      });
+    },
+
+    // 6. Bật tự động (Mặc định -1,-1 để chạy 24/7 theo cảm biến)
+    turnOnAuto: (
+      deviceIndex,
+      start_hour = -1,
+      end_hour = -1,
+      manual_pwm = 128,
+    ) => {
+      // Đảm bảo start_hour và end_hour không bị undefined
+      const finalStart = start_hour ?? -1;
+      const finalEnd = end_hour ?? -1;
+
+      console.log("🎯 turnOnAuto called:", {
+        deviceIndex,
+        finalStart,
+        finalEnd,
+        manual_pwm,
+      });
+
+      return controlDevice(deviceIndex, {
+        mode: 1,
+        manual_pwm,
+        start_hour: finalStart,
+        end_hour: finalEnd,
+      });
+    },
   };
 
   // Cập nhật Ref mỗi khi hàm thay đổi
@@ -288,7 +414,7 @@ export const IotProvider = ({ children }) => {
       isPolling,
       refreshIotData: refreshFastData,
       refreshHistory,
-      refreshNotifications: refreshNotificationData,
+      refreshNotificationData,
       controlDevice,
       deviceHelpers,
       markAsRead: handleMarkAsRead,

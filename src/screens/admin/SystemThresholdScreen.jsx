@@ -42,14 +42,12 @@ const SystemThresholdScreen = ({ navigation }) => {
   const { adminDefaults, updateAdminDefault, loading, refreshAdminDefaults } =
     useThreshold();
 
-  // State local quản lý việc nhập liệu
   const [localThresholds, setLocalThresholds] = useState({
     temp: { min: "0", max: "0" },
     soil: { min: "0", max: "0" },
     light: { min: "0", max: "0" },
   });
 
-  // Map dữ liệu từ adminDefaults (BE) vào state local
   useEffect(() => {
     if (adminDefaults && adminDefaults.length > 0) {
       const newLocal = { ...localThresholds };
@@ -103,7 +101,6 @@ const SystemThresholdScreen = ({ navigation }) => {
     }
   };
 
-  // Vì đây là Admin, "Reset" có nghĩa là tải lại dữ liệu từ Server để xóa các thay đổi chưa lưu
   const handleRefreshData = () => {
     refreshAdminDefaults();
   };
@@ -125,8 +122,8 @@ const SystemThresholdScreen = ({ navigation }) => {
       </View>
 
       <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: "#fff" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.description}>
@@ -175,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 45,
     padding: 30,
-    backgroundColor: "#429257",
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   scrollContent: { padding: 20 },

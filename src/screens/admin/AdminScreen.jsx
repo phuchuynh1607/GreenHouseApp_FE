@@ -12,14 +12,14 @@ import { useAuth } from "../../hooks/useAuth";
 import { useIoT } from "../../hooks/useIoT";
 
 const AdminScreen = ({ navigation }) => {
-  const { unreadCount, markedasRead } = useIoT();
+  const { unreadCount, markAsRead } = useIoT();
   const adminTools = [
     {
       id: 1,
       title: "Quản lý người dùng",
       subtitle: "Xem danh sách, chi tiết và lịch sử đăng nhập",
       icon: "people-circle-outline",
-      color: "#429257",
+      color: "#2f6b3f",
       target: "UserList",
     },
     {
@@ -46,13 +46,12 @@ const AdminScreen = ({ navigation }) => {
       icon: "chatbubbles-outline",
       color: "#cf5915",
       target: "AdminFeedbackList",
-      hasBadge: true,
     },
   ];
   const { logout } = useAuth();
   const handleNavigate = (tool) => {
     if (tool.hasBadge) {
-      markedasRead();
+      markAsRead();
     }
     navigation.navigate(tool.target);
   };

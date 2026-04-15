@@ -48,12 +48,10 @@ export const fetchAllDevices = async () => {
  */
 export const updateDeviceSettings = async (deviceIndex, settings = {}) => {
   try {
-    // Tạo payload sạch
     const payload = {
       device_index: Number(deviceIndex),
     };
 
-    // Chỉ thêm vào payload nếu giá trị khác null/undefined
     if (settings.mode !== undefined && settings.mode !== null)
       payload.mode = Number(settings.mode);
     if (settings.manual_pwm !== undefined && settings.manual_pwm !== null)
