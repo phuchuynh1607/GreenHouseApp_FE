@@ -22,12 +22,12 @@ const MainTab = () => {
       <Tab.Screen
         name="IoT"
         component={DashboardStack}
-        options={{ title: "Giám sát" }}
+        options={{ title: "Dashboard" }}
       />
       <Tab.Screen
         name="About Me"
         component={ProfileStack}
-        options={{ title: "Cá nhân" }}
+        options={{ title: "Profile" }}
       />
     </Tab.Navigator>
   );

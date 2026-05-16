@@ -67,7 +67,7 @@ const UsersListScreen = ({ navigation }) => {
           >
             <Ionicons name="arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Quản lý thành viên</Text>
+          <Text style={styles.headerTitle}>User Management</Text>
           <View style={{ width: 26 }} />
         </View>
 
@@ -75,7 +75,7 @@ const UsersListScreen = ({ navigation }) => {
           <Ionicons name="search" size={20} color="#6B7280" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Tìm kiếm người dùng..."
+            placeholder="Find..."
             placeholderTextColor="#9CA3AF"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -108,9 +108,7 @@ const UsersListScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.center}>
               <Ionicons name="people-outline" size={60} color="#E5E7EB" />
-              <Text style={styles.emptyText}>
-                Không tìm thấy thành viên nào
-              </Text>
+              <Text style={styles.emptyText}>Empty</Text>
             </View>
           }
         />

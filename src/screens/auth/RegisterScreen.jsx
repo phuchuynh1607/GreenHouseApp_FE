@@ -65,10 +65,9 @@ const RegisterScreen = ({ navigation }) => {
     if (isValid) {
       setStep(2);
     } else {
-      // Tìm lỗi đầu tiên xuất hiện trong các trường ở Bước 1
       const firstErrorKey = fieldsToValidate.find((field) => errors[field]);
       if (firstErrorKey) {
-        Alert.alert("Thông tin chưa đúng", errors[firstErrorKey]?.message);
+        Alert.alert("Incorrect info", errors[firstErrorKey]?.message);
       }
     }
   };
@@ -76,17 +75,15 @@ const RegisterScreen = ({ navigation }) => {
   const onSubmit = async (data) => {
     try {
       await registerApi(data);
-      Alert.alert(
-        "Thành công",
-        "Tạo tài khoản thành công! Mời bạn đăng nhập.",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }],
-      );
+      Alert.alert("Success!", "Create account successfully! Please login", [
+        { text: "OK", onPress: () => navigation.navigate("Login") },
+      ]);
     } catch (err) {
       const serverError = err.response?.data?.detail;
       const errorMessage = Array.isArray(serverError)
         ? serverError[0].msg
-        : serverError || "Đã có lỗi xảy ra. Vui lòng thử lại!";
-      Alert.alert("Lỗi đăng ký", errorMessage);
+        : serverError || " Please try again!";
+      Alert.alert("Register failed!", errorMessage);
     }
   };
 
@@ -99,16 +96,15 @@ const RegisterScreen = ({ navigation }) => {
         <View style={styles.card}>
           <View style={styles.header}>
             <Text style={styles.title}>Create an Account</Text>
-            <Text style={styles.stepIndicator}>Bước {step} / 2</Text>
+            <Text style={styles.stepIndicator}>Step {step} / 2</Text>
           </View>
 
-          {/* STEP 1: Sử dụng display để giữ state */}
           <View style={{ display: step === 1 ? "flex" : "none" }}>
             <ControlledInput
               control={control}
               name="email"
               label="Email"
-              placeholder="Nhập email của bạn"
+              placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -118,23 +114,23 @@ const RegisterScreen = ({ navigation }) => {
                 <ControlledInput
                   control={control}
                   name="first_name"
-                  label="Họ"
-                  placeholder="Họ"
+                  label="First name"
+                  placeholder="First name"
                 />
               </View>
               <View style={{ flex: 1, marginLeft: 10 }}>
                 <ControlledInput
                   control={control}
                   name="last_name"
-                  label="Tên"
-                  placeholder="Tên"
+                  label="Last name"
+                  placeholder="Lastname"
                 />
               </View>
             </View>
             <ControlledInput
               control={control}
               name="phone_number"
-              label="Số điện thoại"
+              label="Phone number"
               placeholder="09xx xxx xxx"
               keyboardType="numeric"
               maxLength={10}
@@ -150,13 +146,13 @@ const RegisterScreen = ({ navigation }) => {
               control={control}
               name="username"
               label="Tên đăng nhập"
-              placeholder="Nhập username"
+              placeholder="Enter your username"
               autoCapitalize="none"
             />
             <ControlledInput
               control={control}
               name="password"
-              label="Mật khẩu"
+              label="Password"
               placeholder="******"
               secureTextEntry={true}
             />
@@ -178,12 +174,12 @@ const RegisterScreen = ({ navigation }) => {
             <ControlledInput
               control={control}
               name="confirmPassword"
-              label="Xác nhận mật khẩu"
+              label="confirm password"
               placeholder="******"
               secureTextEntry={true}
             />
             <Text style={styles.warningText}>
-              ⚠️ Bạn sẽ dùng username và mật khẩu này để đăng nhập sau này.
+              ⚠️ You will use your username and password for login!
             </Text>
 
             <View style={styles.actionRow}>
@@ -199,12 +195,12 @@ const RegisterScreen = ({ navigation }) => {
                 style={{ flex: 2 }}
                 isLoading={isSubmitting}
                 onPress={handleSubmit(onSubmit, (err) => {
-                  console.log("Lỗi Validation:", err);
+                  console.log("Validation Error:", err);
                   const firstError = Object.values(err)[0];
-                  Alert.alert("Lỗi nhập liệu", firstError?.message);
+                  Alert.alert("Value Error", firstError?.message);
                 })}
               >
-                Đăng ký
+                Register
               </CustomButton>
             </View>
           </View>

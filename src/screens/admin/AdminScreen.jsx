@@ -16,24 +16,24 @@ const AdminScreen = ({ navigation }) => {
   const adminTools = [
     {
       id: 1,
-      title: "Quản lý người dùng",
-      subtitle: "Xem danh sách, chi tiết và lịch sử đăng nhập",
+      title: "User Management",
+      subtitle: "View user list, details, and login history",
       icon: "people-circle-outline",
       color: "#2f6b3f",
       target: "UserList",
     },
     {
       id: 2,
-      title: "Cấu hình hệ thống",
-      subtitle: "Thiết lập ngưỡng mặc định (Temp, Soil, Light)",
+      title: "System Configuration",
+      subtitle: "Set default thresholds (Temp, Soil, Light)",
       icon: "settings-outline",
       color: "#1F2937",
       target: "SystemThreshold",
     },
     {
       id: 3,
-      title: "Nhật ký hệ thống",
-      subtitle: "Xem toàn bộ cảnh báo thiết bị từ người dùng",
+      title: "System Logs",
+      subtitle: "View all device alerts from users",
       icon: "document-text-outline",
       color: "#3B82F6",
       target: "AdminNotificationLog",
@@ -41,8 +41,8 @@ const AdminScreen = ({ navigation }) => {
     },
     {
       id: 4,
-      title: "Phản hồi người dùng",
-      subtitle: "Xem toàn bộ phản hồi từ người dùng",
+      title: "User Feedback",
+      subtitle: "View all feedback from users",
       icon: "chatbubbles-outline",
       color: "#cf5915",
       target: "AdminFeedbackList",
@@ -60,14 +60,13 @@ const AdminScreen = ({ navigation }) => {
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
-        <Text style={styles.welcomeText}>Bảng điều khiển</Text>
+        <Text style={styles.welcomeText}>Dashboard</Text>
         <Text style={styles.adminName}>Administrator</Text>
       </View>
-      {/* Banner trang trí trạng thái hệ thống */}
       <View style={styles.statusBanner}>
         <View>
-          <Text style={styles.statusTitle}>Trạng thái hệ thống</Text>
-          <Text style={styles.statusText}>Hoạt động bình thường</Text>
+          <Text style={styles.statusTitle}>System Status</Text>
+          <Text style={styles.statusText}>Operating Normally</Text>
         </View>
         <View style={styles.statusIndicator} />
       </View>
@@ -110,11 +109,9 @@ const AdminScreen = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* Đăng xuất */}
         <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
           <Ionicons name="log-out-outline" size={22} color="#EF4444" />
-          <Text style={styles.logoutBtnText}>Đăng xuất</Text>
+          <Text style={styles.logoutBtnText}>Log out</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

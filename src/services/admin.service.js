@@ -1,10 +1,7 @@
 import axiosClient from "./apiClient";
-/**
- * ADMIN SERVICE
- * Quản lý các API dành riêng cho quyền Admin
- */
+//Admin service
 
-// 1. Lấy danh sách toàn bộ User (Chỉ những người có role là 'user')
+// 1. get all users
 export const fetchAllUsers = async () => {
   try {
     const response = await axiosClient.get("/admin/users/");
@@ -17,7 +14,7 @@ export const fetchAllUsers = async () => {
     throw error;
   }
 };
-// 2. Lấy thông tin chi tiết của một User cụ thể qua ID
+// 2. get user detail
 export const fetchUserDetailbyId = async (User_Id) => {
   try {
     const response = await axiosClient.get(`/admin/user/${User_Id}`);
@@ -30,7 +27,7 @@ export const fetchUserDetailbyId = async (User_Id) => {
     throw error;
   }
 };
-//3. Xóa user ra khỏi hệ thóng
+//3. delete user
 export const DeleteUserbyId = async (User_Id) => {
   try {
     const response = await axiosClient.delete(`/admin/user/${User_Id}`);
@@ -44,7 +41,7 @@ export const DeleteUserbyId = async (User_Id) => {
   }
 };
 
-// 4. Xem lịch sử đăng nhập của một User bất kỳ (Admin view)
+// 4. get user login history
 export const fetchUserLoginHistoryByAdmin = async (userId) => {
   try {
     const response = await axiosClient.get(`/admin/login-history/${userId}`);

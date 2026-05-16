@@ -63,11 +63,11 @@ const EditProfileScreen = ({ navigation }) => {
   const handleSave = async () => {
     try {
       await updateProfile(formData, selectedImage);
-      Alert.alert("Thành công", "Đã cập nhật thông tin cá nhân!", [
+      Alert.alert("Completed", "Updated your infomation!", [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (error) {
-      Alert.alert("Lỗi", "Không thể lưu thông tin.");
+      Alert.alert("Error", "Save info failed.");
     }
   };
 
@@ -78,7 +78,6 @@ const EditProfileScreen = ({ navigation }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={[styles.container]}>
-          {/* Header giữ giao diện hiện đại */}
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -86,12 +85,12 @@ const EditProfileScreen = ({ navigation }) => {
             >
               <Ionicons name="close" size={28} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Chỉnh sửa hồ sơ</Text>
+            <Text style={styles.title}>Edit Profile</Text>
             <TouchableOpacity onPress={handleSave} disabled={loading}>
               {loading ? (
                 <ActivityIndicator size="small" color="#2f6b3f" />
               ) : (
-                <Text style={styles.saveBtnText}>Lưu</Text>
+                <Text style={styles.saveBtnText}>Save</Text>
               )}
             </TouchableOpacity>
           </View>
@@ -110,44 +109,44 @@ const EditProfileScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={pickImage}>
-              <Text style={styles.changePhotoText}>Thay đổi ảnh đại diện</Text>
+              <Text style={styles.changePhotoText}>Change Avatar</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Họ</Text>
+              <Text style={styles.label}>First name</Text>
               <TextInput
                 style={styles.input}
                 value={formData.first_name}
                 onChangeText={(txt) =>
                   setFormData({ ...formData, first_name: txt })
                 }
-                placeholder="Nhập họ"
+                placeholder="Enter first name"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Tên</Text>
+              <Text style={styles.label}>Last name</Text>
               <TextInput
                 style={styles.input}
                 value={formData.last_name}
                 onChangeText={(txt) =>
                   setFormData({ ...formData, last_name: txt })
                 }
-                placeholder="Nhập tên"
+                placeholder="Enter last name"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Số điện thoại</Text>
+              <Text style={styles.label}>Phone number</Text>
               <TextInput
                 style={styles.input}
                 value={formData.phone_number}
                 onChangeText={(txt) =>
                   setFormData({ ...formData, phone_number: txt })
                 }
-                placeholder="Nhập số điện thoại"
+                placeholder="Phone number"
                 keyboardType="phone-pad"
               />
             </View>
@@ -159,7 +158,7 @@ const EditProfileScreen = ({ navigation }) => {
                 color="#6B7280"
               />
               <Text style={styles.infoText}>
-                Email và Tên đăng nhập không thể thay đổi để đảm bảo an toàn.
+                Email and username can't be changed.
               </Text>
             </View>
           </View>

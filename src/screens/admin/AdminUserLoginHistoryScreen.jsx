@@ -22,7 +22,7 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
   }, [userId]);
 
   const formatDevice = (deviceInfo) => {
-    if (!deviceInfo) return "Thiết bị không xác định";
+    if (!deviceInfo) return "Unknown Device";
     const ua = String(deviceInfo);
     if (ua.includes("iPhone")) return "iPhone App";
     if (ua.includes("Android")) return "Android App";
@@ -31,17 +31,16 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
   };
 
   const renderItem = ({ item }) => {
-    // 1. Logic xác định loại thiết bị và Icon tương ứng
     const deviceInfo = String(item.device_info || "").toLowerCase();
-    let iconName = "help-circle-outline"; // Mặc định
-    let iconBgColor = "#F3F4F6"; // Màu nền mặc định
+    let iconName = "help-circle-outline";
+    let iconBgColor = "#F3F4F6";
     if (
       deviceInfo.includes("iphone") ||
       deviceInfo.includes("android") ||
       deviceInfo.includes("mobile")
     ) {
       iconName = "phone-portrait-outline";
-      iconBgColor = "#EEF2FF"; // Màu xanh nhạt cho Mobile
+      iconBgColor = "#EEF2FF";
     } else if (
       deviceInfo.includes("chrome") ||
       deviceInfo.includes("safari") ||
@@ -49,12 +48,11 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
       deviceInfo.includes("desktop")
     ) {
       iconName = "desktop-outline";
-      iconBgColor = "#FFF7ED"; // Màu cam nhạt cho Browser
+      iconBgColor = "#FFF7ED";
     }
 
     return (
       <View style={styles.historyCard}>
-        {/* Thay đổi màu nền icon dựa trên loại thiết bị */}
         <View style={[styles.iconCircle, { backgroundColor: iconBgColor }]}>
           <Ionicons name={iconName} size={24} color="#2f6b3f" />
         </View>
@@ -64,7 +62,7 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
             {formatDevice(item.device_info)}
           </Text>
           <Text style={styles.ipText}>
-            IP: {item.ip_address || "Đang cập nhật"}
+            IP: {item.ip_address || "Uploading..."}
           </Text>
           <Text style={styles.dateText}>
             {item.login_time
@@ -74,7 +72,7 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
         </View>
 
         <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>Thành công</Text>
+          <Text style={styles.statusText}>Success</Text>
         </View>
       </View>
     );
@@ -89,16 +87,14 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Lịch sử của User #{userId}</Text>
+        <Text style={styles.headerTitle}>Login history of User #{userId}</Text>
         <View style={{ width: 40 }} />
       </View>
 
       {loading ? (
         <View style={styles.loadingCenter}>
           <ActivityIndicator size="large" color="#2f6b3f" />
-          <Text style={{ marginTop: 10, color: "#6B7280" }}>
-            Đang truy xuất dữ liệu...
-          </Text>
+          <Text style={{ marginTop: 10, color: "#6B7280" }}>Loading...</Text>
         </View>
       ) : (
         <FlatList
@@ -111,9 +107,7 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Ionicons name="alert-circle-outline" size={60} color="#D1D5DB" />
-              <Text style={styles.emptyText}>
-                User này chưa có lịch sử đăng nhập.
-              </Text>
+              <Text style={styles.emptyText}>This user haven't logged in.</Text>
             </View>
           }
         />
@@ -122,7 +116,6 @@ const AdminUserLoginHistoryScreen = ({ route, navigation }) => {
   );
 };
 
-// Copy nguyên styles của bạn qua đây để đồng bộ giao diện
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9FAFB" },
   header: {
@@ -132,7 +125,7 @@ const styles = StyleSheet.create({
     paddingTop: 45,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#2f6b3f", // Bạn có thể chỉnh màu đậm hơn một chút để phân biệt
+    backgroundColor: "#2f6b3f",
   },
   headerTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
   listContent: { padding: 16 },

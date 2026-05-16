@@ -17,7 +17,6 @@ const DashboardScreen = ({ navigation }) => {
   const { sensors, devices, loading, deviceHelpers } = useIoT();
   const insets = useSafeAreaInsets();
 
-  // Template cố định cho UI
   const deviceTemplates = useMemo(
     () => [
       { name: "Hệ thống Đèn", device_index: 0, icon: "lightbulb-outline" },
@@ -78,7 +77,7 @@ const DashboardScreen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>Thông số thực tế</Text>
           <View style={styles.sensorGrid}>
             <SensorCard
-              title="Nhiệt độ"
+              title="Temperature"
               value={sensors?.temp}
               unit="°C"
               icon="thermometer"
@@ -88,7 +87,7 @@ const DashboardScreen = ({ navigation }) => {
               }
             />
             <SensorCard
-              title="Ánh sáng"
+              title="Light"
               value={sensors?.light}
               unit="%"
               icon="brightness-6"
@@ -98,7 +97,7 @@ const DashboardScreen = ({ navigation }) => {
               }
             />
             <SensorCard
-              title="Ẩm đất"
+              title="Soil moisture"
               value={sensors?.soil}
               unit="%"
               icon="water-percent"
@@ -108,7 +107,7 @@ const DashboardScreen = ({ navigation }) => {
               }
             />
             <SensorCard
-              title="Ẩm khí"
+              title="Humidity"
               value={sensors?.humi}
               unit="%"
               icon="cloud-outline"
@@ -119,7 +118,7 @@ const DashboardScreen = ({ navigation }) => {
             />
           </View>
 
-          <Text style={styles.sectionTitle}>Thiết bị hệ thống</Text>
+          <Text style={styles.sectionTitle}>System Device</Text>
           {displayDevices.map((device) => (
             <DeviceControlCard
               key={device.device_index}
@@ -149,7 +148,6 @@ const SensorCard = ({ title, value, unit, icon, color, onPress }) => (
         {value !== undefined && value !== null ? `${value}${unit}` : "--"}
       </Text>
     </View>
-    {/* Thêm icon mũi tên nhỏ để người dùng biết là bấm vào được */}
     <Ionicons
       name="chevron-forward"
       size={16}

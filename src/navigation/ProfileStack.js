@@ -1,7 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-// Import các màn hình liên quan
 import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
 import ChangePasswordScreen from "../screens/profile/ChangePasswordScreen";
@@ -19,10 +17,7 @@ const ProfileStack = () => {
       initialRouteName="UserProfileMain"
       screenOptions={{ headerShown: false }}
     >
-      {/* Màn hình gốc của nhánh này */}
       <Stack.Screen name="UserProfileMain" component={UserProfileScreen} />
-
-      {/* Các màn hình con được navigate tới */}
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="LoginHistory" component={LoginHistoryScreen} />

@@ -28,7 +28,7 @@ const CreateFeedback = ({ navigation }) => {
   const handleSubmit = async () => {
     // Validation
     if (!subject.trim() || !message.trim()) {
-      Alert.alert("Thông báo", "Vui lòng nhập đầy đủ tiêu đề và nội dung.");
+      Alert.alert("Notice", "Please enter title and content.");
       return;
     }
 
@@ -39,16 +39,15 @@ const CreateFeedback = ({ navigation }) => {
       await refreshTickets();
 
       Alert.alert(
-        "Gửi thành công",
-        "Phản hồi của bạn đã được gửi tới ban quản trị. Chúng tôi sẽ sớm phản hồi lại.",
+        "Sent!",
+        "Your feedback is sent to admin. We will response soon.",
         [{ text: "OK", onPress: () => navigation.navigate("FeedbackHistory") }],
       );
     } catch (error) {
       console.error("Feedback error:", error);
       Alert.alert(
-        "Lỗi",
-        error.message ||
-          "Không thể gửi phản hồi lúc này. Vui lòng thử lại sau.",
+        "Error",
+        error.message || "Can't send feedback now! Please try again later.",
       );
     } finally {
       setLoading(false);
@@ -70,36 +69,34 @@ const CreateFeedback = ({ navigation }) => {
             >
               <Ionicons name="close-outline" size={28} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Gửi phản hồi</Text>
+            <Text style={styles.title}>Send feedback</Text>
             <View style={{ width: 40 }} />
           </View>
 
           <View style={styles.content}>
             <Text style={styles.description}>
-              Bạn gặp sự cố kỹ thuật hay có góp ý gì cho hệ thống? Hãy để lại
-              lời nhắn bên dưới nhé!
+              Having technical issues or feedback for the system? Leave us a
+              message below!
             </Text>
 
-            {/* Input Tiêu đề */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Chủ đề</Text>
+              <Text style={styles.label}>Title</Text>
               <TextInput
                 style={styles.input}
                 value={subject}
                 onChangeText={setSubject}
-                placeholder="Ví dụ: Lỗi cảm biến, Góp ý giao diện..."
+                placeholder="Ex: UI/UX issues, connection lost,..."
                 placeholderTextColor="#9CA3AF"
               />
             </View>
 
-            {/* Input Nội dung */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Nội dung chi tiết</Text>
+              <Text style={styles.label}>Content</Text>
               <TextInput
                 style={[styles.input, styles.textArea]}
                 value={message}
                 onChangeText={setMessage}
-                placeholder="Mô tả chi tiết vấn đề của bạn..."
+                placeholder="Describe your problems"
                 placeholderTextColor="#9CA3AF"
                 multiline={true}
                 numberOfLines={6}
@@ -107,7 +104,6 @@ const CreateFeedback = ({ navigation }) => {
               />
             </View>
 
-            {/* Nút gửi */}
             <TouchableOpacity
               style={[styles.submitButton, loading && { opacity: 0.7 }]}
               onPress={handleSubmit}
@@ -123,7 +119,7 @@ const CreateFeedback = ({ navigation }) => {
                     color="#fff"
                     style={{ marginRight: 8 }}
                   />
-                  <Text style={styles.submitText}>Gửi yêu cầu hỗ trợ</Text>
+                  <Text style={styles.submitText}>Submit</Text>
                 </>
               )}
             </TouchableOpacity>

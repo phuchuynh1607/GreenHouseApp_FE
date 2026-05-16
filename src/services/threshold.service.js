@@ -1,6 +1,6 @@
 import axiosClient from "./apiClient";
 
-// 1. Lấy ngưỡng đang có hiệu lực (đã tính ưu tiên)
+//fetch Threshold (user custom >> admin)
 export const fetchActiveThresholdsApi = async () => {
   try {
     const response = await axiosClient.get("/thresholds/active");
@@ -11,7 +11,7 @@ export const fetchActiveThresholdsApi = async () => {
   }
 };
 
-// 2. Admin: Cài đặt ngưỡng mặc định
+// admin threshold (system threshold)
 export const setAdminThresholdApi = async (sensorType, min, max) => {
   return (
     await axiosClient.post("/thresholds/admin", {
@@ -31,7 +31,7 @@ export const fetchAdminThresholdApi = async () => {
   }
 };
 
-// 3. User: Cài đặt ngưỡng cá nhân
+// user custom threshold
 export const setUserThresholdApi = async (sensorType, min, max) => {
   return (
     await axiosClient.post("/thresholds/user", {
@@ -42,7 +42,7 @@ export const setUserThresholdApi = async (sensorType, min, max) => {
   ).data;
 };
 
-// 4. User: Xóa ngưỡng cá nhân để quay lại mặc định (DELETE)
+// delete user custom threshold
 export const resetToDefaultApi = async (sensorType) => {
   try {
     const response = await axiosClient.delete(`/thresholds/user/${sensorType}`);

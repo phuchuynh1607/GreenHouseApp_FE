@@ -22,15 +22,15 @@ const AdminFeedbackListScreen = ({ navigation }) => {
   const getStatusStyle = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":
-        return { bg: "#FEF3C7", text: "#D97706", label: "Đang chờ" };
+        return { bg: "#FEF3C7", text: "#D97706", label: "pending" };
       case "processing":
-        return { bg: "#DBEAFE", text: "#2563EB", label: "Đang xử lý" };
+        return { bg: "#DBEAFE", text: "#2563EB", label: "processing" };
       case "resolved":
-        return { bg: "#D1FAE5", text: "#059669", label: "Đã giải quyết" };
+        return { bg: "#D1FAE5", text: "#059669", label: "resolved" };
       case "closed":
-        return { bg: "#d52525", text: "#ffffffc1", label: "Đã đóng" };
+        return { bg: "#d52525", text: "#ffffffc1", label: "closed" };
       default:
-        return { bg: "#F3F4F6", text: "#6B7280", label: status || "Không rõ" };
+        return { bg: "#F3F4F6", text: "#6B7280", label: status || "Unknown" };
     }
   };
 
@@ -52,7 +52,6 @@ const AdminFeedbackListScreen = ({ navigation }) => {
                 size={16}
                 color="#4B5563"
               />
-              {/* Hiển thị tên User gửi - Giả định BE trả về user_name hoặc email */}
               <Text style={styles.userNameText}>{item.user_name}</Text>
             </View>
             <Text style={styles.subjectText} numberOfLines={1}>
@@ -93,7 +92,7 @@ const AdminFeedbackListScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Quản lý phản hồi</Text>
+        <Text style={styles.headerTitle}>Response feedback</Text>
         <TouchableOpacity onPress={refreshTickets} style={styles.refreshButton}>
           <Ionicons name="refresh" size={22} color="#fff" />
         </TouchableOpacity>
@@ -115,10 +114,8 @@ const AdminFeedbackListScreen = ({ navigation }) => {
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Ionicons name="mail-open-outline" size={60} color="#D1D5DB" />
-              <Text style={styles.emptyTitle}>Hộp thư trống</Text>
-              <Text style={styles.emptySub}>
-                Hiện chưa có yêu cầu hỗ trợ nào từ người dùng.
-              </Text>
+              <Text style={styles.emptyTitle}>Empty</Text>
+              <Text style={styles.emptySub}>There is no feedback yet.</Text>
             </View>
           }
         />

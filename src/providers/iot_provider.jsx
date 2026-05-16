@@ -37,7 +37,6 @@ export const IotProvider = ({ children }) => {
   const debounceTimer = useRef(null);
   const intervalsRef = useRef({ fast: null, notification: null });
 
-  // 1. Hàm lấy dữ liệu (Cảm biến + Thiết bị)
   const refreshFastData = useCallback(async () => {
     if (!user || user.role === "admin") return;
     if (!isPolling) return;
@@ -60,11 +59,10 @@ export const IotProvider = ({ children }) => {
         console.error("Fetch devices failed:", devicesData.reason);
       }
     } catch (err) {
-      console.error("Lỗi fetch Fast IoT data:", err);
+      console.error("Fast IoT data failed:", err);
     }
   }, [user, isPolling]);
 
-  // 2. Hàm lấy THÔNG BÁO
   const refreshNotificationData = useCallback(async () => {
     if (!user) return;
     try {
@@ -78,7 +76,7 @@ export const IotProvider = ({ children }) => {
         setUnreadCount(count);
       }
     } catch (err) {
-      console.error("Lỗi fetch Notifications:", err);
+      console.error("Fetch Notifications error:", err);
     }
   }, [user]);
 
@@ -88,13 +86,12 @@ export const IotProvider = ({ children }) => {
       setUnreadCount(0);
       await refreshNotificationData();
     } catch (err) {
-      console.error("Không thể đánh dấu đã đọc:", err);
+      console.error("Mark noti read error:", err);
     }
   };
   /**
-   * 3. Hàm điều khiển thiết bị (Cải tiến)
-   * @param {number} deviceIndex - Index của thiết bị
-   * @param {object} settings - Các trường cần cập nhật {mode, manual_pwm, ...}
+   * @param {number} deviceIndex
+   * @param {object} settings - settings needed for control device {mode, manual_pwm, ...}
    */
   const controlDevice = useCallback(
     async (deviceIndex, settings) => {
@@ -123,7 +120,7 @@ export const IotProvider = ({ children }) => {
       if (normalizedEndHour === null || normalizedEndHour === undefined)
         normalizedEndHour = -1;
 
-      // 1. Kiểm tra logic cho chế độ AUTO (Mode 1)
+      // MODE 1: AUTO
       const targetMode =
         settings.mode !== undefined ? settings.mode : currentDevice.mode;
 
@@ -138,7 +135,7 @@ export const IotProvider = ({ children }) => {
 
         if (!isAllDay && !isValidRange) {
           const error = new Error(
-            "Chế độ Tự động yêu cầu: Cả hai giờ là -1 (24/7) HOẶC khung giờ 0-23h hợp lệ (start != end)",
+            "Auto mode requires either: both hours set to -1 (24/7), or a valid time range between 0–23 hours (start ≠ end).",
           );
           error.validationError = true;
           throw error;
@@ -151,63 +148,46 @@ export const IotProvider = ({ children }) => {
           end: normalizedEndHour,
         });
       }
-
-      // 2. Chặn trường hợp "lẻ" (-1 và một số khác -1) để khớp logic Backend
       if (
         (normalizedStartHour === -1 && normalizedEndHour !== -1) ||
         (normalizedStartHour !== -1 && normalizedEndHour === -1)
       ) {
-        const error = new Error(
-          "Hẹn giờ phải đặt cả hai là -1 (tắt hẹn giờ) hoặc cả hai trong khoảng 0-23h (bật hẹn giờ)",
-        );
+        const error = new Error("Hours must be both -1 or between 0-23");
         error.validationError = true;
         throw error;
       }
-
-      // 3. Validate dải giá trị PWM
       if (
         settings.manual_pwm !== undefined &&
         (settings.manual_pwm < 0 || settings.manual_pwm > 255)
       ) {
-        const error = new Error("Giá trị PWM phải nằm trong khoảng 0-255");
+        const error = new Error("PWM value must be between 0-255");
         error.validationError = true;
         throw error;
       }
-
-      // 4. ✅ THÊM: Xử lý đặc biệt khi chuyển mode
-      // Nếu chuyển từ AUTO sang MANUAL, cần đảm bảo timer không còn ảnh hưởng
       if (
         targetMode === 2 &&
         currentDevice.mode === 1 &&
         settings.start_hour === undefined &&
         settings.end_hour === undefined
       ) {
-        // Giữ nguyên timer cũ nhưng backend sẽ xử lý
         console.log(" Switching from AUTO to MANUAL, keeping existing timer:", {
           normalizedStartHour,
           normalizedEndHour,
         });
       }
-
-      // ========== TẠO REQUEST BODY CUỐI CÙNG ==========
       const finalSettings = {
         ...settings,
         start_hour: normalizedStartHour,
         end_hour: normalizedEndHour,
       };
-
-      // Log để debug
-      console.log("📤 Control device request:", {
+      console.log(" Control device request:", {
         deviceIndex,
         targetMode,
         originalSettings: settings,
         finalSettings,
       });
-
-      // ========== THỰC THI (Optimistic Update) ==========
       lastManualAction.current = Date.now();
       const oldDevices = [...devices];
-
       // Optimistic update
       setDevices((prev) =>
         prev.map((d) =>
@@ -215,7 +195,6 @@ export const IotProvider = ({ children }) => {
             ? {
                 ...d,
                 ...finalSettings,
-                // Đảm bảo timer được cập nhật đúng
                 start_hour: normalizedStartHour,
                 end_hour: normalizedEndHour,
               }
@@ -232,19 +211,17 @@ export const IotProvider = ({ children }) => {
               deviceIndex,
               finalSettings,
             );
-
-            // Đồng bộ lại dữ liệu chuẩn từ server
             const freshDevices = await fetchAllDevices();
             setDevices(freshDevices);
 
-            console.log("✅ Control device success:", response);
+            console.log(" Control device success:", response);
             resolve(response);
           } catch (err) {
             console.error(
-              "❌ Control device error:",
+              " Control device error:",
               err.response?.data || err.message,
             );
-            setDevices(oldDevices); // Rollback nếu lỗi API
+            setDevices(oldDevices); //Rollback if error occur
 
             const errorMessage =
               err.response?.data?.detail ||
@@ -261,7 +238,6 @@ export const IotProvider = ({ children }) => {
   );
 
   const deviceHelpers = {
-    // 1. Thay đổi Mode (tự động giữ timer cũ nếu không truyền timer mới)
     changeMode: (deviceIndex, mode, start_hour = null, end_hour = null) => {
       const settings = { mode };
       if (start_hour !== null && end_hour !== null) {
@@ -271,13 +247,10 @@ export const IotProvider = ({ children }) => {
       return controlDevice(deviceIndex, settings);
     },
 
-    // 2. Chỉ cập nhật tốc độ PWM
     changePWM: (deviceIndex, manual_pwm) =>
       controlDevice(deviceIndex, { manual_pwm }),
 
-    // 3. Cập nhật Hẹn giờ (gửi -1 để chạy 24/7 hoặc tắt hẹn giờ)
     updateTimer: (deviceIndex, start_hour, end_hour) => {
-      // Sử dụng ?? để xử lý null/undefined
       const finalStart = start_hour ?? -1;
       const finalEnd = end_hour ?? -1;
 
@@ -287,31 +260,27 @@ export const IotProvider = ({ children }) => {
       });
     },
 
-    // 4. Tắt thiết bị nhanh
     turnOff: (deviceIndex) => controlDevice(deviceIndex, { mode: 0 }),
 
-    // 5. Bật thủ công (Reset timer về -1 để tránh bị tắt theo lịch cũ)
     turnOnManual: (deviceIndex, manual_pwm = 128) => {
       return controlDevice(deviceIndex, {
         mode: 2,
         manual_pwm,
-        start_hour: -1, // Reset timer
-        end_hour: -1, // Reset timer
+        start_hour: -1,
+        end_hour: -1,
       });
     },
 
-    // 6. Bật tự động (Mặc định -1,-1 để chạy 24/7 theo cảm biến)
     turnOnAuto: (
       deviceIndex,
       start_hour = -1,
       end_hour = -1,
       manual_pwm = 128,
     ) => {
-      // Đảm bảo start_hour và end_hour không bị undefined
       const finalStart = start_hour ?? -1;
       const finalEnd = end_hour ?? -1;
 
-      console.log("🎯 turnOnAuto called:", {
+      console.log("turnOnAuto called:", {
         deviceIndex,
         finalStart,
         finalEnd,
@@ -326,17 +295,14 @@ export const IotProvider = ({ children }) => {
       });
     },
   };
-
-  // Cập nhật Ref mỗi khi hàm thay đổi
   useEffect(() => {
     refreshFastDataRef.current = refreshFastData;
     refreshNotificationRef.current = refreshNotificationData;
   }, [refreshFastData, refreshNotificationData]);
 
-  // 4. Polling
+  //  Polling
   useEffect(() => {
     if (!user) {
-      // Reset state khi logout
       setSensors(null);
       setDevices([]);
       setNotifications([]);
@@ -346,7 +312,6 @@ export const IotProvider = ({ children }) => {
       return;
     }
     setLoading(true);
-    // Khởi tạo data lần đầu
     const initData = async () => {
       try {
         await Promise.allSettled([
@@ -360,7 +325,7 @@ export const IotProvider = ({ children }) => {
     initData();
     // Setup intervals
     const intervals = [];
-    // Interval cho sensors/devices (chỉ user thường, 5 giây)
+    // Interval cho sensors/devices (5 giây)
     if (user.role !== "admin") {
       const fastInterval = setInterval(() => {
         refreshFastDataRef.current();
@@ -377,7 +342,7 @@ export const IotProvider = ({ children }) => {
     );
     intervals.push(notificationInterval);
     intervalsRef.current.notification = notificationInterval;
-    // Cleanup
+
     return () => {
       intervals.forEach((interval) => clearInterval(interval));
       intervalsRef.current = { fast: null, notification: null };
@@ -387,7 +352,6 @@ export const IotProvider = ({ children }) => {
     };
   }, [user, refreshFastData, refreshNotificationData]);
 
-  // 5. Hàm lấy lịch sử (Dùng khi vào màn hình Chart)
   const refreshHistory = useCallback(
     async (hours = 24, max_points = 50) => {
       if (!user) return [];
@@ -397,7 +361,7 @@ export const IotProvider = ({ children }) => {
         setHistory(data);
         return data;
       } catch (err) {
-        console.error("Lỗi fetch History:", err);
+        console.error("Fetch sensor history error:", err);
         return [];
       }
     },

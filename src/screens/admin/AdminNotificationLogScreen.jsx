@@ -17,19 +17,19 @@ const AdminNotificationLogScreen = ({ navigation }) => {
 
   const sensorConfigs = {
     temp: {
-      label: "Nhiệt độ",
+      label: "Temperature",
       icon: "thermometer",
       color: "#EF4444",
       bg: "#FEE2E2",
     },
     soil: {
-      label: "Độ ẩm đất",
-      icon: "water",
-      color: "#3B82F6",
-      bg: "#DBEAFE",
+      label: "Soil moisture",
+      icon: "leaf-outline",
+      color: "#10B981",
+      bg: "#D1FAE5",
     },
     light: {
-      label: "Ánh sáng",
+      label: "Light",
       icon: "sunny",
       color: "#F59E0B",
       bg: "#FEF3C7",
@@ -38,7 +38,7 @@ const AdminNotificationLogScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     const config = sensorConfigs[item.sensor_type] || {
-      label: "Hệ thống",
+      label: "System",
       icon: "alert-circle",
       color: "#6B7280",
       bg: "#F3F4F6",
@@ -46,7 +46,6 @@ const AdminNotificationLogScreen = ({ navigation }) => {
 
     return (
       <View style={styles.card}>
-        {/* Phần Icon bên trái */}
         <View style={[styles.iconBox, { backgroundColor: config.bg }]}>
           <Ionicons name={config.icon} size={22} color={config.color} />
         </View>
@@ -68,16 +67,18 @@ const AdminNotificationLogScreen = ({ navigation }) => {
             </Text>
           </View>
 
-          <Text style={styles.title}>Cảnh báo {config.label}</Text>
+          <Text style={styles.title}>Warning {config.label}</Text>
 
           <Text style={styles.message}>{item.message}</Text>
 
           <View style={styles.footerRow}>
             <Text style={styles.valueText}>
-              Giá trị:{" "}
+              Value:{" "}
               <Text style={{ fontWeight: "700" }}>{item.current_value}</Text>
             </Text>
-            <Text style={styles.valueText}>Ngưỡng: {item.threshold_value}</Text>
+            <Text style={styles.valueText}>
+              Threshold: {item.threshold_value}
+            </Text>
           </View>
         </View>
       </View>
@@ -100,8 +101,10 @@ const AdminNotificationLogScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>Nhật ký hệ thống</Text>
-          <Text style={styles.headerSub}>Quản lý cảnh báo toàn user</Text>
+          <Text style={styles.headerTitle}>System Logs</Text>
+          <Text style={styles.headerSub}>
+            User's notifications management system
+          </Text>
         </View>
 
         <TouchableOpacity
@@ -122,7 +125,6 @@ const AdminNotificationLogScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
-        // Kết hợp Pull to Refresh để Admin lấy data ngay lập tức
         refreshControl={
           <RefreshControl
             refreshing={loading}
@@ -133,9 +135,7 @@ const AdminNotificationLogScreen = ({ navigation }) => {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="document-text-outline" size={60} color="#D1D5DB" />
-            <Text style={styles.emptyText}>
-              Chưa có log cảnh báo nào từ các thiết bị.
-            </Text>
+            <Text style={styles.emptyText}>There is no notifications yet.</Text>
           </View>
         }
       />

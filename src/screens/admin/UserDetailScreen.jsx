@@ -28,7 +28,7 @@ const UserDetailScreen = ({ route, navigation }) => {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#2f6b3f" />
-        <Text style={styles.loadingText}>Đang tải thông tin...</Text>
+        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );
   }
@@ -43,7 +43,7 @@ const UserDetailScreen = ({ route, navigation }) => {
         >
           <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Thông tin chi tiết</Text>
+        <Text style={styles.headerTitle}>Detail Information</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -69,27 +69,24 @@ const UserDetailScreen = ({ route, navigation }) => {
           </Text>
         </View>
 
-        {/* Info Section - Read Only */}
         <View style={styles.infoContainer}>
           <View style={styles.infoItem}>
-            <Text style={styles.label}>Tên đăng nhập</Text>
+            <Text style={styles.label}>Username</Text>
             <Text style={styles.value}>{selectedUserDetail?.username}</Text>
           </View>
 
           <View style={styles.infoItem}>
-            <Text style={styles.label}>Số điện thoại</Text>
+            <Text style={styles.label}>Phone number</Text>
             <Text style={styles.value}>
               {selectedUserDetail?.phone_number || "Chưa cập nhật"}
             </Text>
           </View>
 
           <View style={styles.infoItem}>
-            <Text style={styles.label}>ID Hệ thống</Text>
+            <Text style={styles.label}>ID system</Text>
             <Text style={styles.value}>#{selectedUserDetail?.id}</Text>
           </View>
         </View>
-
-        {/* Action Buttons for Admin */}
         <View style={styles.actionContainer}>
           <TouchableOpacity
             style={styles.historyButton}
@@ -100,7 +97,7 @@ const UserDetailScreen = ({ route, navigation }) => {
             }
           >
             <Ionicons name="time-outline" size={22} color="#fff" />
-            <Text style={styles.historyButtonText}>Xem lịch sử đăng nhập</Text>
+            <Text style={styles.historyButtonText}>Login history</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -108,7 +105,7 @@ const UserDetailScreen = ({ route, navigation }) => {
             onPress={() => deleteUser(selectedUserDetail.id)}
           >
             <Ionicons name="trash-outline" size={20} color="#EF4444" />
-            <Text style={styles.deleteButtonText}>Xóa người dùng này</Text>
+            <Text style={styles.deleteButtonText}>Delete this user</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

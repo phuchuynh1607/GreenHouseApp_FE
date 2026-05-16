@@ -4,7 +4,6 @@ const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 
 export const tokenStorage = {
-  // Lưu cả 2 token
   setTokens: async (accessToken, refreshToken) => {
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
@@ -13,8 +12,7 @@ export const tokenStorage = {
       console.error("Error setting tokens", error);
     }
   },
-
-  // Lấy Access Token
+  //get access token
   getAccessToken: async () => {
     try {
       return await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
@@ -24,7 +22,7 @@ export const tokenStorage = {
     }
   },
 
-  // Lấy Refresh Token
+  // get refresh token
   getRefreshToken: async () => {
     try {
       return await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
@@ -34,7 +32,7 @@ export const tokenStorage = {
     }
   },
 
-  // Xóa sạch token khi Logout hoặc lỗi
+  //clear token
   clearTokens: async () => {
     try {
       await AsyncStorage.removeItem(ACCESS_TOKEN_KEY);

@@ -51,20 +51,20 @@ const ChangePasswordScreen = ({ navigation }) => {
         new_password: data.newPassword,
       });
 
-      Alert.alert("Thành công", "Mật khẩu của bạn đã được thay đổi!", [
+      Alert.alert("Done", "Updated your password successfully!", [
         { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (error) {
       console.error("Change password error:", error);
 
-      let errorMessage = "Không thể đổi mật khẩu";
+      let errorMessage = "Can't change password";
       if (error.response?.data?.detail) {
         errorMessage = error.response.data.detail;
       } else if (error.message) {
         errorMessage = error.message;
       }
 
-      Alert.alert("Thất bại", errorMessage);
+      Alert.alert("Failed", errorMessage);
     } finally {
       setLoading(false);
     }
@@ -124,7 +124,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Đổi mật khẩu</Text>
+            <Text style={styles.title}>Change password</Text>
             <View style={{ width: 40 }} />
           </View>
 
@@ -132,15 +132,15 @@ const ChangePasswordScreen = ({ navigation }) => {
             <View style={styles.infoBox}>
               <Ionicons name="shield-checkmark" size={24} color="#2f6b3f" />
               <Text style={styles.infoText}>
-                Mật khẩu mới nên bao gồm chữ cái, số và ký tự đặc biệt để bảo vệ
-                tài khoản tốt hơn.
+                Your new password should include letters, numbers, and special
+                characters to better protect your account.
               </Text>
             </View>
 
             <PasswordField
               name="password"
-              label="Mật khẩu hiện tại"
-              placeholder="Nhập mật khẩu đang dùng"
+              label="Current password"
+              placeholder="Enter your current password"
               showPass={showPass.current}
               onToggleShow={() =>
                 setShowPass({ ...showPass, current: !showPass.current })
@@ -149,8 +149,8 @@ const ChangePasswordScreen = ({ navigation }) => {
 
             <PasswordField
               name="newPassword"
-              label="Mật khẩu mới"
-              placeholder="Tối thiểu 6 ký tự"
+              label="New password"
+              placeholder="At least 6 characters"
               showPass={showPass.new}
               onToggleShow={() =>
                 setShowPass({ ...showPass, new: !showPass.new })
@@ -159,8 +159,8 @@ const ChangePasswordScreen = ({ navigation }) => {
 
             <PasswordField
               name="confirmPassword"
-              label="Xác nhận mật khẩu mới"
-              placeholder="Nhập lại mật khẩu mới"
+              label="Confirm password"
+              placeholder="Confirm new password"
               showPass={showPass.confirm}
               onToggleShow={() =>
                 setShowPass({ ...showPass, confirm: !showPass.confirm })
@@ -175,7 +175,7 @@ const ChangePasswordScreen = ({ navigation }) => {
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.btnText}>Cập nhật mật khẩu</Text>
+                <Text style={styles.btnText}>Change password</Text>
               )}
             </TouchableOpacity>
           </View>

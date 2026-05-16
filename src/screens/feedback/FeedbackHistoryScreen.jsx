@@ -21,43 +21,38 @@ const FeedbackHistoryScreen = ({ navigation }) => {
     refreshTickets();
   }, []);
 
-  // --- CẬP NHẬT TRẠNG THÁI  ---
+  // --- STATUS  ---
   const getStatusStyle = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":
-        return { bg: "#FEF3C7", text: "#D97706", label: "Đang chờ" };
+        return { bg: "#FEF3C7", text: "#D97706", label: "pending" };
       case "processing":
-        return { bg: "#DBEAFE", text: "#2563EB", label: "Đang xử lý" };
+        return { bg: "#DBEAFE", text: "#2563EB", label: "processing" };
       case "resolved":
-        return { bg: "#D1FAE5", text: "#059669", label: "Đã giải quyết" };
+        return { bg: "#D1FAE5", text: "#059669", label: "resolved" };
       case "closed":
-        return { bg: "#d52525", text: "#ffffffc1", label: "Đã đóng" };
+        return { bg: "#d52525", text: "#ffffffc1", label: "closed" };
       default:
-        return { bg: "#F3F4F6", text: "#6B7280", label: status || "Không rõ" };
+        return { bg: "#F3F4F6", text: "#6B7280", label: status || "Unknown" };
     }
   };
 
-  // --- HÀM XỬ LÝ ĐÓNG TICKET ---
   const handleCloseTicket = (ticketId) => {
-    Alert.alert(
-      "Xác nhận",
-      "Bạn có chắc chắn muốn đóng cuộc hội thoại này không?",
-      [
-        { text: "Hủy", style: "cancel" },
-        {
-          text: "Đóng",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await updateTicketStatus(ticketId, "closed");
-              Alert.alert("Thành công", "Đã đóng cuộc hội thoại.");
-            } catch (err) {
-              Alert.alert("Lỗi", "Không thể cập nhật trạng thái.");
-            }
-          },
+    Alert.alert("Confirm", "Do you want to close this conversation?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Close",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await updateTicketStatus(ticketId, "closed");
+            Alert.alert("Success", "Closed conversation.");
+          } catch (err) {
+            Alert.alert("Error", "Update conversation failed.");
+          }
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const renderTicketItem = ({ item }) => {
@@ -133,7 +128,7 @@ const FeedbackHistoryScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Lịch sử phản hồi</Text>
+        <Text style={styles.headerTitle}>Feedback History</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("CreateFeedback")}
           style={styles.addButton}
@@ -164,15 +159,15 @@ const FeedbackHistoryScreen = ({ navigation }) => {
                   color="#D1D5DB"
                 />
               </View>
-              <Text style={styles.emptyTitle}>Chưa có phản hồi nào</Text>
+              <Text style={styles.emptyTitle}>There is no feedback.</Text>
               <Text style={styles.emptySub}>
-                Các yêu cầu hỗ trợ của bạn sẽ xuất hiện tại đây.
+                Your feedback history will be shown here.
               </Text>
               <TouchableOpacity
                 style={styles.createBtn}
                 onPress={() => navigation.navigate("CreateFeedback")}
               >
-                <Text style={styles.createBtnText}>Gửi phản hồi ngay</Text>
+                <Text style={styles.createBtnText}>Send Feedback</Text>
               </TouchableOpacity>
             </View>
           }

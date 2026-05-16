@@ -19,21 +19,21 @@ const ThresholdSettingScreen = ({ navigation }) => {
   const sensors = [
     {
       type: "temp",
-      title: "Cảnh báo Nhiệt độ",
+      title: "Temp Threshold",
       icon: "thermometer-outline",
       color: "#EF4444",
       unit: "°C",
     },
     {
       type: "soil",
-      title: "Cảnh báo Độ ẩm đất",
+      title: "Soil Threshold",
       icon: "leaf-outline",
       color: "#10B981",
       unit: "%",
     },
     {
       type: "light",
-      title: "Cảnh báo Ánh sáng",
+      title: "Light Threshold",
       icon: "sunny-outline",
       color: "#F59E0B",
       unit: "%",
@@ -42,8 +42,6 @@ const ThresholdSettingScreen = ({ navigation }) => {
 
   const { activeThresholds, updateThreshold, resetThreshold, loading } =
     useThreshold();
-
-  // State local để quản lý việc nhập liệu trước khi nhấn Lưu
   const [localThresholds, setLocalThresholds] = useState({
     temp: { min: "10", max: "35" },
     soil: { min: "40", max: "80" },
@@ -51,7 +49,6 @@ const ThresholdSettingScreen = ({ navigation }) => {
   });
 
   useEffect(() => {
-    // 2. Map dữ liệu từ BE (sensor_type: temp, soil, light) vào State local
     if (activeThresholds && activeThresholds.length > 0) {
       const tempData = activeThresholds.find((t) => t.sensor_type === "temp");
       const soilData = activeThresholds.find((t) => t.sensor_type === "soil");
@@ -76,28 +73,30 @@ const ThresholdSettingScreen = ({ navigation }) => {
 
   const handleSave = async (type) => {
     const data = localThresholds[type];
-    const labels = { temp: "Nhiệt độ", soil: "Độ ẩm đất", light: "Ánh sáng" };
+    const labels = {
+      temp: "Temperature",
+      soil: "Soil moisture",
+      light: "Light",
+    };
 
-    // Chuyển đổi sang số khi nhấn Lưu
     const minValue = parseFloat(data.min);
     const maxValue = parseFloat(data.max);
 
-    // Validate nhanh
     if (isNaN(minValue) || isNaN(maxValue)) {
-      Alert.alert("Lỗi", "Vui lòng nhập con số hợp lệ");
+      Alert.alert("Error", "Invalid input");
       return;
     }
 
     if (minValue >= maxValue) {
-      Alert.alert("Lỗi", "Ngưỡng dưới phải nhỏ hơn ngưỡng trên");
+      Alert.alert("Error", "Min value must be smaller than max");
       return;
     }
 
     try {
       await updateThreshold(type, minValue, maxValue);
-      Alert.alert("Thành công", `Đã cập nhật ngưỡng cho ${labels[type]}`);
+      Alert.alert("Succesfully!", `Updated threshold for ${labels[type]}`);
     } catch (error) {
-      Alert.alert("Lỗi", "Không thể cập nhật ngưỡng.");
+      Alert.alert("Error", "Update threshold failed");
     }
   };
   const handleChange = (type, field, txt) => {
@@ -121,7 +120,7 @@ const ThresholdSettingScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Cài đặt ngưỡng</Text>
+        <Text style={styles.headerTitle}>Set threshold</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -131,11 +130,8 @@ const ThresholdSettingScreen = ({ navigation }) => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.description}>
-            Hệ thống sẽ gửi thông báo khi các thông số vượt ra khỏi khoảng an
-            toàn mà bạn thiết lập.
+            You will receive notifications when thresholds is reached.
           </Text>
-
-          {/* 3. Hiển thị 3 Card tương ứng với BE */}
           {sensors.map((sensor) => (
             <ThresholdCard
               key={sensor.type}
@@ -153,8 +149,7 @@ const ThresholdSettingScreen = ({ navigation }) => {
               color="#6B7280"
             />
             <Text style={styles.infoText}>
-              Giá trị mặc định được thiết lập bởi Admin dựa trên tiêu chuẩn của
-              hệ thống.
+              Default thresholds value will be set by admin.
             </Text>
           </View>
         </ScrollView>

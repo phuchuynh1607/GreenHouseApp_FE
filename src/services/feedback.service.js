@@ -1,6 +1,6 @@
 import axiosClient from "./apiClient";
 
-// 1. User: Tạo một ticket mới (kèm tin nhắn đầu tiên)
+// create ticket
 export const createTicketApi = async (subject, initialMessage) => {
   try {
     const response = await axiosClient.post("/feedback/tickets", {
@@ -17,7 +17,7 @@ export const createTicketApi = async (subject, initialMessage) => {
   }
 };
 
-// 2. Cả Admin/User: Gửi thêm tin nhắn vào Ticket đã có
+// send message
 export const sendMessageApi = async (ticketId, content) => {
   try {
     const response = await axiosClient.post(
@@ -33,7 +33,7 @@ export const sendMessageApi = async (ticketId, content) => {
   }
 };
 
-// 3. Cả Admin/User: Lấy chi tiết toàn bộ tin nhắn trong 1 Ticket
+//get ticket detail
 export const fetchTicketDetailsApi = async (ticketId) => {
   try {
     const response = await axiosClient.get(`/feedback/tickets/${ticketId}`);
@@ -47,16 +47,16 @@ export const fetchTicketDetailsApi = async (ticketId) => {
   }
 };
 
-// 4. User: Xem danh sách các phản hồi của mình
+// user: get my ticket
 export const fetchMyTicketsApi = async () => {
   return (await axiosClient.get("/feedback/my-tickets")).data;
 };
 
-// 5. Admin: Xem tất cả yêu cầu hỗ trợ
+// admin: get all ticket
 export const fetchAllTicketsAdminApi = async () => {
   return (await axiosClient.get("/feedback/admin/all-tickets")).data;
 };
-//6.Admin/User: Update trạng thái của ticket
+//update ticket status
 export const updateTicketStatusApi = async (ticketId, newStatus) => {
   try {
     const response = await axiosClient.patch(

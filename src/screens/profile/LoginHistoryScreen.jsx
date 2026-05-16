@@ -23,7 +23,7 @@ const LoginHistoryScreen = ({ navigation }) => {
   }, []);
 
   const formatDevice = (deviceInfo) => {
-    if (!deviceInfo) return "Thiết bị không xác định";
+    if (!deviceInfo) return "Unknown Device";
     const ua = String(deviceInfo);
     if (ua.includes("iPhone")) return "iPhone App";
     if (ua.includes("Android")) return "Android App";
@@ -32,7 +32,6 @@ const LoginHistoryScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => {
-    // Kiểm tra an toàn cho item
     if (!item) return null;
 
     return (
@@ -55,7 +54,7 @@ const LoginHistoryScreen = ({ navigation }) => {
             {formatDevice(item.device_info)}
           </Text>
           <Text style={styles.ipText}>
-            IP: {item.ip_address || "Đang cập nhật"}
+            IP: {item.ip_address || "Uploading"}
           </Text>
           <Text style={styles.dateText}>
             {item.login_time
@@ -65,7 +64,7 @@ const LoginHistoryScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>Thành công</Text>
+          <Text style={styles.statusText}>Success</Text>
         </View>
       </View>
     );
@@ -73,7 +72,6 @@ const LoginHistoryScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.container]}>
-      {/* Custom Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -81,16 +79,14 @@ const LoginHistoryScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Lịch sử đăng nhập</Text>
+        <Text style={styles.headerTitle}>Login History</Text>
         <View style={{ width: 40 }} />
       </View>
 
       {loading ? (
         <View style={styles.loadingCenter}>
           <ActivityIndicator size="large" color="#2f6b3f" />
-          <Text style={{ marginTop: 10, color: "#6B7280" }}>
-            Đang tải lịch sử...
-          </Text>
+          <Text style={{ marginTop: 10, color: "#6B7280" }}>Loading...</Text>
         </View>
       ) : (
         <FlatList
@@ -108,14 +104,14 @@ const LoginHistoryScreen = ({ navigation }) => {
                 color="#D1D5DB"
               />
               <Text style={styles.emptyText}>
-                Chưa có dữ liệu đăng nhập nào.
+                No login information available.
               </Text>
               <TouchableOpacity
                 onPress={() => refreshProfile && refreshProfile()}
                 style={{ marginTop: 15 }}
               >
                 <Text style={{ color: "#2f6b3f", fontWeight: "bold" }}>
-                  Thử tải lại
+                  Retry
                 </Text>
               </TouchableOpacity>
             </View>

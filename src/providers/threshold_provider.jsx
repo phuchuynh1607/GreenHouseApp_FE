@@ -15,44 +15,38 @@ export const ThresholdProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Lấy danh sách ngưỡng (đã tính ưu tiên User > Admin)
   const getThresholds = useCallback(async () => {
     if (!user) return;
     try {
       const data = await fetchActiveThresholdsApi();
       setActiveThresholds(data);
     } catch (err) {
-      console.error("Lỗi fetch thresholds:", err);
+      console.error("Fetch thresholds error:", err);
     } finally {
       setLoading(false);
     }
   }, [user]);
 
-  // Hàm đặt ngưỡng mới
   const updateThreshold = async (sensorType, min, max) => {
     try {
       await setUserThresholdApi(sensorType, min, max);
-      await getThresholds(); // Refresh lại sau khi update
+      await getThresholds();
     } catch (err) {
-      console.error("Lỗi cập nhật ngưỡng:", err);
+      console.error("Update custom threshold error:", err);
       throw err;
     }
   };
 
-  // Hàm xóa ngưỡng cá nhân (Reset về mặc định)
   const resetThreshold = async (sensorType) => {
     try {
       await resetToDefaultApi(sensorType);
       await getThresholds();
     } catch (err) {
-      console.error("Lỗi reset ngưỡng:", err);
+      console.error("Reset threshold error:", err);
       throw err;
     }
   };
 
-  // --- LOGIC CHO ADMIN (SYSTEM DEFAULTS) ---
-
-  // Lấy ngưỡng mặc định hệ thống (chỉ gọi khi user là admin)
   const getAdminDefaults = useCallback(async () => {
     if (!user || user.role !== "admin") return;
     setLoading(true);
@@ -60,7 +54,7 @@ export const ThresholdProvider = ({ children }) => {
       const data = await fetchAdminThresholdApi();
       setAdminDefaults(data);
     } catch (err) {
-      console.error("Lỗi fetch admin defaults:", err);
+      console.error("Fetch admin defaults error:", err);
     } finally {
       setLoading(false);
     }
@@ -72,7 +66,7 @@ export const ThresholdProvider = ({ children }) => {
       await getAdminDefaults();
       await getThresholds();
     } catch (err) {
-      console.error("Lỗi cập nhật ngưỡng hệ thống:", err);
+      console.error("Update system threshold error:", err);
       throw err;
     }
   };
@@ -86,17 +80,12 @@ export const ThresholdProvider = ({ children }) => {
   return (
     <ThresholdContext.Provider
       value={{
-        // Data & Loading
         activeThresholds,
         adminDefaults,
         loading,
-
-        // User Actions
         updateThreshold,
         resetThreshold,
         refreshThresholds: getThresholds,
-
-        // Admin Actions
         updateAdminDefault,
         refreshAdminDefaults: getAdminDefaults,
       }}

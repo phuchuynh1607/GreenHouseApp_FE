@@ -27,7 +27,6 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
   const [sending, setSending] = useState(false);
   const flatListRef = useRef(null);
 
-  // Load dữ liệu chat khi vào màn hình
   useEffect(() => {
     getTicketDetails(ticketId);
   }, [ticketId]);
@@ -39,13 +38,12 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
     try {
       await sendNewMessage(ticketId, messageText);
       setMessageText("");
-      // Cuộn xuống cuối sau khi gửi
       setTimeout(
         () => flatListRef.current?.scrollToEnd({ animated: true }),
         100,
       );
     } catch (err) {
-      console.error("Gửi tin nhắn lỗi:", err);
+      console.error("Sent ticket failed:", err);
     } finally {
       setSending(false);
     }
@@ -105,7 +103,7 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
             <Text style={styles.headerSub}>ID: #{ticketId}</Text>
             {currentTicket?.status === "closed" && (
               <View style={styles.closedBadge}>
-                <Text style={styles.closedBadgeText}>ĐÃ ĐÓNG</Text>
+                <Text style={styles.closedBadgeText}>Closed</Text>
               </View>
             )}
           </View>
@@ -137,7 +135,7 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
           >
             <Ionicons name="lock-closed-outline" size={18} color="#6B7280" />
             <Text style={styles.closedText}>
-              Cuộc hội thoại đã kết thúc. Bạn chỉ có thể xem lịch sử.
+              This conversation is closed. You can only see history.
             </Text>
           </View>
         ) : (
@@ -146,7 +144,7 @@ const FeedbackDetailScreen = ({ route, navigation }) => {
           >
             <TextInput
               style={styles.input}
-              placeholder="Nhập nội dung phản hồi..."
+              placeholder="Aa..."
               value={messageText}
               onChangeText={setMessageText}
               multiline

@@ -39,7 +39,6 @@ const ControlledInput = ({
               {...textInputProps}
             />
 
-            {/* Hiển thị icon nếu là trường mật khẩu */}
             {secureTextEntry && (
               <TouchableOpacity
                 style={styles.iconContainer}

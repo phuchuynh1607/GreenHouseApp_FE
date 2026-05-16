@@ -1,7 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-// Import các màn hình quản trị
 import AdminScreen from "../screens/admin/AdminScreen";
 import SystemThresholdScreen from "../screens/admin/SystemThresholdScreen";
 import UsersListScreen from "../screens/admin/UserListScreen";
@@ -22,10 +20,7 @@ const AdminStack = () => {
         animation: "slide_from_right",
       }}
     >
-      {/* 1. Màn hình Dashboard trung tâm của Admin */}
       <Stack.Screen name="AdminMain" component={AdminScreen} />
-
-      {/* 2. Luồng Quản lý người dùng */}
       <Stack.Screen name="UserList" component={UsersListScreen} />
       <Stack.Screen name="UserDetail" component={UserDetailScreen} />
       <Stack.Screen
@@ -45,7 +40,6 @@ const AdminStack = () => {
         component={AdminFeedbackDetailScreen}
       />
 
-      {/* 3. Luồng Quản lý hệ thống */}
       <Stack.Screen name="SystemThreshold" component={SystemThresholdScreen} />
     </Stack.Navigator>
   );

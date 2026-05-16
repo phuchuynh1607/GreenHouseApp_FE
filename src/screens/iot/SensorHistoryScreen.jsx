@@ -19,10 +19,9 @@ const SensorHistoryScreen = ({ route, navigation }) => {
   const { history, refreshHistory, loading } = useIoT();
 
   useEffect(() => {
-    refreshHistory(24); // Lấy 24h qua
+    refreshHistory(24);
   }, [refreshHistory]);
 
-  //  Chuyển đổi dữ liệu thực sang định dạng Chart
   const chartData = useMemo(() => {
     if (!history || history.length === 0) {
       return {
@@ -39,7 +38,6 @@ const SensorHistoryScreen = ({ route, navigation }) => {
       return item.timestamp.split(" ")[0];
     });
 
-    // Lấy giá trị theo type (temp, humi, light, soil)
     const values = history.map((item) => item[type] || 0);
 
     return {
@@ -54,7 +52,6 @@ const SensorHistoryScreen = ({ route, navigation }) => {
     };
   }, [history, type]);
 
-  // Tính toán số liệu Thống kê thực tế
   const stats = useMemo(() => {
     if (!history || history.length === 0) return { max: 0, min: 0 };
     const values = history.map((item) => item[type]);
@@ -65,10 +62,10 @@ const SensorHistoryScreen = ({ route, navigation }) => {
   }, [history, type]);
 
   const config = {
-    temp: { title: "Lịch sử Nhiệt độ", unit: "°C", color: "#FF6B6B" },
-    light: { title: "Lịch sử Ánh sáng", unit: "%", color: "#FFD93D" },
-    soil: { title: "Lịch sử Độ ẩm đất", unit: "%", color: "#4D96FF" },
-    humi: { title: "Lịch sử Độ ẩm khí", unit: "%", color: "#6BCB77" },
+    temp: { title: "Temperature log", unit: "°C", color: "#FF6B6B" },
+    light: { title: "Light log", unit: "%", color: "#FFD93D" },
+    soil: { title: "Soil log", unit: "%", color: "#4D96FF" },
+    humi: { title: "Humidity log", unit: "%", color: "#6BCB77" },
   }[type];
 
   return (
@@ -93,31 +90,31 @@ const SensorHistoryScreen = ({ route, navigation }) => {
         ) : (
           <>
             <SensorChart
-              title={`Biểu đồ ${config.title}`}
+              title={`Chart${config.title}`}
               unit={config.unit}
               color={config.color}
               chartData={chartData}
             />
             <View style={styles.statsContainer}>
-              <Text style={styles.sectionTitle}>Thông số chi tiết</Text>
+              <Text style={styles.sectionTitle}>Detail value</Text>
               <View style={styles.statRow}>
-                <Text>Cao nhất:</Text>
+                <Text>Maximum:</Text>
                 <Text style={styles.statValue}>
                   {stats.max}
                   {config.unit}
                 </Text>
               </View>
               <View style={styles.statRow}>
-                <Text>Thấp nhất:</Text>
+                <Text>Minimum:</Text>
                 <Text style={styles.statValue}>
                   {stats.min}
                   {config.unit}
                 </Text>
               </View>
               <View style={styles.statRow}>
-                <Text>Số lượng mẫu:</Text>
+                <Text>Samplings:</Text>
                 <Text style={styles.statValue}>
-                  {history?.length || 0} điểm
+                  {history?.length || 0} points
                 </Text>
               </View>
             </View>

@@ -9,15 +9,13 @@ import {
 } from "../services/admin.service";
 
 export const AdminProvider = ({ children }) => {
-  const [users, setUsers] = useState([]); // Danh sách toàn bộ user
-  const [selectedUserDetail, setSelectedUserDetail] = useState(null); // Chi tiết 1 user đang chọn
-  const [selectedUserHistory, setSelectedUserHistory] = useState([]); // Lịch sử của user đang chọn
+  const [users, setUsers] = useState([]);
+  const [selectedUserDetail, setSelectedUserDetail] = useState(null);
+  const [selectedUserHistory, setSelectedUserHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // 1. Hàm lấy danh sách tất cả user
   const getUsers = useCallback(async () => {
-    // Chỉ fetch nếu user hiện tại là admin
     if (!user || user.role !== "admin") {
       setUsers([]);
       return;
@@ -34,11 +32,9 @@ export const AdminProvider = ({ children }) => {
     }
   }, [user]);
 
-  // 2. Hàm lấy chi tiết và lịch sử của một user cụ thể
   const getUserFullInfo = async (userId) => {
     setLoading(true);
     try {
-      // Gọi song song để tối ưu tốc độ
       const [detail, history] = await Promise.all([
         fetchUserDetailbyId(userId),
         fetchUserLoginHistoryByAdmin(userId),
@@ -54,7 +50,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // 3. Hàm xóa user và cập nhật lại danh sách local ngay lập tức
   const handleDeleteUser = async (userId) => {
     setLoading(true);
     try {
@@ -74,7 +69,6 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  // Tự động load danh sách khi vào luồng Admin
   useEffect(() => {
     getUsers();
   }, [getUsers]);
@@ -86,9 +80,9 @@ export const AdminProvider = ({ children }) => {
         selectedUserDetail,
         selectedUserHistory,
         loading,
-        refreshUsers: getUsers, // Gọi lại danh sách (ví dụ khi kéo để refresh)
-        getUserDetail: getUserFullInfo, // Gọi khi nhấn vào 1 user trong list
-        deleteUser: handleDeleteUser, // Gọi khi Admin nhấn nút xóa
+        refreshUsers: getUsers,
+        getUserDetail: getUserFullInfo,
+        deleteUser: handleDeleteUser,
       }}
     >
       {children}

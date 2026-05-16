@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-// Import các Provider
+//Providers
 import { Providers as AuthProvider } from "./src/providers/auth_provider";
 import { UserProvider } from "./src/providers/user_provider";
 import { IotProvider } from "./src/providers/iot_provider";
@@ -13,7 +13,7 @@ import { ThresholdProvider } from "./src/providers/threshold_provider";
 import { AdminProvider } from "./src/providers/admin_provider";
 import { useAuth } from "./src/hooks/useAuth";
 
-// Import Navigation Stack
+//Tab/Stack
 import AdminTab from "./src/navigation/AdminTab";
 import MainTab from "./src/navigation/MainTab";
 import LoginScreen from "./src/screens/auth/LoginScreen";

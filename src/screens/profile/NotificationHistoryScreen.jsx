@@ -17,19 +17,19 @@ const NotificationHistoryScreen = ({ navigation }) => {
 
   const sensorConfigs = {
     temp: {
-      label: "Nhiệt độ",
+      label: "Temperature",
       icon: "thermometer-outline",
       color: "#EF4444",
       bg: "#FEE2E2",
     },
     soil: {
-      label: "Độ ẩm đất",
+      label: "Soil moisture",
       icon: "leaf-outline",
       color: "#10B981",
       bg: "#D1FAE5",
     },
     light: {
-      label: "Ánh sáng",
+      label: "Light",
       icon: "sunny-outline",
       color: "#F59E0B",
       bg: "#FEF3C7",
@@ -60,7 +60,7 @@ const NotificationHistoryScreen = ({ navigation }) => {
 
           <Text style={styles.message} numberOfLines={2}>
             {item.message ||
-              `Giá trị: ${item.current_value}. Vượt ngưỡng ${item.threshold_value}.`}
+              `Value: ${item.current_value}. Reached ${item.threshold_value}.`}
           </Text>
         </View>
       </View>
@@ -77,7 +77,7 @@ const NotificationHistoryScreen = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Lịch sử cảnh báo</Text>
+        <Text style={styles.headerTitle}>Notifications History</Text>
 
         <TouchableOpacity onPress={refreshNotificationData}>
           <Ionicons name="refresh" size={22} color="#fff" />
@@ -103,7 +103,7 @@ const NotificationHistoryScreen = ({ navigation }) => {
                 size={60}
                 color="#D1D5DB"
               />
-              <Text style={styles.emptyText}>Chưa có cảnh báo nào.</Text>
+              <Text style={styles.emptyText}>No notifications available</Text>
             </View>
           }
         />

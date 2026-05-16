@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
           setValue("rememberMe", true);
         }
       } catch (e) {
-        console.error("Không thể tải thông tin ghi nhớ");
+        console.error("Can't load info!");
       }
     };
     loadRememberedUser();
@@ -72,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
           ? backendDetail[0].msg
           : typeof backendDetail === "string"
             ? backendDetail
-            : "Đăng nhập thất bại",
+            : "Login failed!",
       );
     }
   };
@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.title}>Sign In</Text>
-          <Text style={styles.subtitle}>Chào mừng bạn quay trở lại</Text>
+          <Text style={styles.subtitle}>Welcome back</Text>
         </View>
 
         {serverError && <Text style={styles.errorText}>{serverError}</Text>}
@@ -90,20 +90,19 @@ const LoginScreen = ({ navigation }) => {
         <ControlledInput
           control={control}
           name="username"
-          label="Tên đăng nhập"
-          placeholder="Nhập username"
+          label="Username"
+          placeholder="Your username"
           autoCapitalize="none"
         />
 
         <ControlledInput
           control={control}
           name="password"
-          label="Mật khẩu"
-          placeholder="Nhập mật khẩu"
+          label="Password"
+          placeholder="Your password"
           secureTextEntry={true}
         />
 
-        {/* Tùy chọn Ghi nhớ & Quên mật khẩu */}
         <View style={styles.optionsRow}>
           <View style={styles.rememberMeContainer}>
             <Switch
@@ -112,13 +111,13 @@ const LoginScreen = ({ navigation }) => {
               trackColor={{ false: "#D1D5DB", true: "#2f6b3f" }}
               thumbColor="#fff"
             />
-            <Text style={styles.optionsText}>Ghi nhớ tôi</Text>
+            <Text style={styles.optionsText}>Remember me</Text>
           </View>
 
           <TouchableOpacity
-            onPress={() => Alert.alert("Thông báo", "Vui lòng liên hệ Admin")}
+            onPress={() => Alert.alert("Cautious", "Please contact Admin")}
           >
-            <Text style={styles.forgotText}>Quên mật khẩu?</Text>
+            <Text style={styles.forgotText}>Forgot password?</Text>
           </TouchableOpacity>
         </View>
 
@@ -127,14 +126,14 @@ const LoginScreen = ({ navigation }) => {
           onPress={handleSubmit(onSubmit)}
           isLoading={isSubmitting}
         >
-          Đăng nhập
+          Login
         </CustomButton>
 
         <TouchableOpacity
           style={styles.footerLink}
           onPress={() => navigation.navigate("Register")}
         >
-          <Text style={styles.footerText}>Chưa có tài khoản? Đăng ký ngay</Text>
+          <Text style={styles.footerText}>Register here</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

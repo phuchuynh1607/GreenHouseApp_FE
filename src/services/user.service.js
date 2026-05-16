@@ -5,7 +5,6 @@ import { fetchUserProfile } from "./auth.service";
 import { tokenStorage } from "../tokenStorage/tokenStorage";
 export const fetchUserInfo = fetchUserProfile;
 
-// Cập nhật thông tin
 export const updateUserInfo = async (updateData) => {
   const response = await axiosClient.put(
     "/users/change_information",

@@ -12,11 +12,10 @@ import { useAuth } from "../hooks/useAuth";
 
 export const FeedbackProvider = ({ children }) => {
   const [tickets, setTickets] = useState([]);
-  const [currentTicket, setCurrentTicket] = useState(null); // Lưu ticket đang xem chi tiết
+  const [currentTicket, setCurrentTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // 1. Lấy danh sách ticket (Tự động phân loại User/Admin)
   const getMyTickets = useCallback(async () => {
     if (!user) return;
     setLoading(true);
@@ -29,24 +28,22 @@ export const FeedbackProvider = ({ children }) => {
       }
       setTickets(data);
     } catch (err) {
-      console.error("Lỗi fetch tickets:", err);
+      console.error("Fetch tickets erro:", err);
     } finally {
       setLoading(false);
     }
   }, [user]);
 
-  // 2. Lấy chi tiết tin nhắn của một Ticket cụ thể
   const getTicketDetails = async (ticketId) => {
     try {
       const data = await fetchTicketDetailsApi(ticketId);
       setCurrentTicket(data);
       return data;
     } catch (err) {
-      console.error("Lỗi fetch chi tiết ticket:", err);
+      console.error("Get ticket details error:", err);
     }
   };
 
-  // 3. Tạo ticket mới
   const handleCreateTicket = async (subject, message) => {
     try {
       const newTicket = await createTicketApi(subject, message);
@@ -57,14 +54,12 @@ export const FeedbackProvider = ({ children }) => {
     }
   };
 
-  // 4. Gửi tin nhắn vào ticket đang mở
   const sendNewMessage = async (ticketId, content) => {
     try {
       await sendMessageApi(ticketId, content);
-      // Cập nhật lại chi tiết ticket để hiện tin nhắn mới ngay lập tức
       await getTicketDetails(ticketId);
     } catch (err) {
-      console.error("Lỗi gửi tin nhắn:", err);
+      console.error("Send message error:", err);
       throw err;
     }
   };
@@ -76,7 +71,7 @@ export const FeedbackProvider = ({ children }) => {
         await getTicketDetails(ticketId);
       }
     } catch (err) {
-      console.error("Lỗi cập nhật trạng thái:", err);
+      console.error("Update ticket status error:", err);
       throw err;
     }
   };

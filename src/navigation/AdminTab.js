@@ -23,9 +23,7 @@ const AdminTab = () => {
             iconName = focused
               ? "shield-checkmark"
               : "shield-checkmark-outline";
-          }
-          // Nếu sau này bạn mở lại Tab IoT
-          else if (route.name === "IoT") {
+          } else if (route.name === "IoT") {
             iconName = focused ? "stats-chart" : "stats-chart-outline";
           }
 
@@ -38,11 +36,9 @@ const AdminTab = () => {
         component={AdminStack}
         options={{
           title: "Quản trị viên",
-          tabBarHideOnKeyboard: true, // Ẩn tab khi hiện bàn phím (rất cần cho Admin)
+          tabBarHideOnKeyboard: true,
         }}
       />
-
-      {/* Thêm các Tab khác nếu cần sau này */}
     </Tab.Navigator>
   );
 };

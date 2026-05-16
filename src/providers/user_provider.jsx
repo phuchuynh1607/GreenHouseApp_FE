@@ -22,7 +22,6 @@ export const UserProvider = ({ children }) => {
     }
     setLoading(true);
     try {
-      // Gọi song song cả 2 để tối ưu thời gian
       const [userData, historyData] = await Promise.all([
         fetchUserInfo(),
         fetchLoginHistory(),
@@ -62,23 +61,22 @@ export const UserProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  // Thêm hàm đổi mật khẩu
+
   const handleChangePassword = async (passwordData) => {
     setLoading(true);
     try {
-      // passwordData cần có format: { password: string, new_password: string }
       await changePasswordApi({
         password: passwordData.password,
         new_password: passwordData.new_password,
       });
-      return { success: true, message: "Đổi mật khẩu thành công" };
+      return { success: true, message: "Change password successfully" };
     } catch (error) {
       console.error("Change password error:", error);
 
-      let errorMessage = "Không thể đổi mật khẩu. Vui lòng thử lại sau.";
+      let errorMessage = "Can't change password";
 
       if (error.response?.status === 401) {
-        errorMessage = "Mật khẩu hiện tại không chính xác.";
+        errorMessage = "Password is incorrect.";
       } else if (error.response?.data?.detail) {
         errorMessage = error.response.data.detail;
       }

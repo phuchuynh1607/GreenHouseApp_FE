@@ -39,18 +39,18 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
 
   const handleUpdateStatus = (newStatus) => {
     Alert.alert(
-      "Xác nhận",
-      `Chuyển trạng thái ticket sang: ${newStatus.toUpperCase()}?`,
+      "Confirm",
+      `Update ticket status: ${newStatus.toUpperCase()}?`,
       [
-        { text: "Hủy", style: "cancel" },
+        { text: "Cancel", style: "cancel" },
         {
-          text: "Cập nhật",
+          text: "Update",
           onPress: async () => {
             try {
               await updateTicketStatus(ticketId, newStatus);
-              Alert.alert("Thành công", "Đã cập nhật trạng thái mới.");
+              Alert.alert("Success", "Updated ticket successfully.");
             } catch (err) {
-              Alert.alert("Lỗi", "Không thể cập nhật trạng thái.");
+              Alert.alert("Error", "Update ticket failed.");
             }
           },
         },
@@ -69,14 +69,14 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
         100,
       );
     } catch (err) {
-      console.error("Gửi lỗi:", err);
+      console.error("Error:", err);
     } finally {
       setSending(false);
     }
   };
 
   const renderMessage = ({ item }) => {
-    const isMe = item.sender_id === user?.id; // Admin gửi
+    const isMe = item.sender_id === user?.id; 
     return (
       <View
         style={[styles.messageRow, isMe ? styles.myMsgRow : styles.userMsgRow]}
@@ -138,7 +138,7 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
       {/* Thanh điều khiển trạng thái (Quick Actions) */}
       {currentTicket?.status !== "closed" && (
         <View style={styles.adminToolBar}>
-          <Text style={styles.toolTitle}>Trạng thái:</Text>
+          <Text style={styles.toolTitle}>Status:</Text>
           <View style={styles.btnGroup}>
             {["processing", "resolved", "closed"].map((st) => (
               <TouchableOpacity
@@ -148,10 +148,10 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
               >
                 <Text style={styles.statusBtnText}>
                   {st === "processing"
-                    ? "Xử lý"
+                    ? "Processing"
                     : st === "resolved"
-                      ? "Xong"
-                      : "Đóng"}
+                      ? "Resolved"
+                      : "Closed"}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -175,15 +175,13 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
             onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
           />
         )}
-
-        {/* Khu vực nhập liệu (Ẩn nếu ticket đã đóng) */}
         {currentTicket?.status !== "closed" ? (
           <View
             style={[styles.inputArea, { paddingBottom: insets.bottom + 10 }]}
           >
             <TextInput
               style={styles.input}
-              placeholder="Trả lời người dùng..."
+              placeholder="Response feedback"
               value={messageText}
               onChangeText={setMessageText}
               multiline
@@ -208,7 +206,7 @@ const AdminFeedbackDetailScreen = ({ route, navigation }) => {
             style={[styles.closedNotice, { paddingBottom: insets.bottom + 20 }]}
           >
             <Text style={styles.closedNoticeText}>
-              Ticket này đã đóng. Không thể gửi thêm tin nhắn.
+              This ticket is closed. Can't send more message.
             </Text>
           </View>
         )}

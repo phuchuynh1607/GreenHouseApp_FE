@@ -17,7 +17,6 @@ const UserProfileScreen = ({ navigation }) => {
 
   const BASE_URL = "https://greenhouse-backend-6hky.onrender.com";
 
-  // Logic hiển thị ảnh: Nếu có ảnh từ server thì dùng, không thì dùng Icon mặc định
   const renderAvatar = () => {
     if (profile?.user_image) {
       return (
@@ -61,7 +60,7 @@ const UserProfileScreen = ({ navigation }) => {
       <View style={styles.header}>
         {renderAvatar()}
         <Text style={styles.username}>
-          {profile?.first_name} {profile?.last_name || "Người dùng"}
+          {profile?.first_name} {profile?.last_name || "User"}
         </Text>
         <Text style={styles.emailText}>{profile?.email}</Text>
 
@@ -69,29 +68,29 @@ const UserProfileScreen = ({ navigation }) => {
           style={styles.editButton}
           onPress={() => navigation.navigate("EditProfile")}
         >
-          <Text style={styles.editButtonText}>Chỉnh sửa hồ sơ</Text>
+          <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
 
       {/* Menu Options */}
       <View style={styles.menuSection}>
-        <Text style={styles.sectionTitle}>Tài khoản & Bảo mật</Text>
+        <Text style={styles.sectionTitle}>Account & Secure</Text>
         <View style={styles.card}>
           <MenuItem
             icon="lock-closed-outline"
-            title="Đổi mật khẩu"
+            title="Change Password"
             onPress={() => navigation.navigate("ChangePassword")}
             color="#2f6b3f"
           />
           <MenuItem
             icon="shield-checkmark-outline"
-            title="Lịch sử đăng nhập"
+            title="Login History"
             onPress={() => navigation.navigate("LoginHistory")}
             color="#10B981"
           />
           <MenuItem
             icon="notifications-outline"
-            title="Lịch sử cảnh báo"
+            title="Notification History"
             onPress={() => {
               navigation.navigate("NotificationsHistory");
             }}
@@ -100,27 +99,26 @@ const UserProfileScreen = ({ navigation }) => {
           />
         </View>
 
-        <Text style={styles.sectionTitle}>Hỗ trợ</Text>
+        <Text style={styles.sectionTitle}>Help</Text>
         <View style={styles.card}>
           <MenuItem
             icon="chatbubbles-outline"
-            title="Gửi phản hồi mới"
+            title="Create Feedback"
             onPress={() => navigation.navigate("CreateFeedback")}
             color="#3B82F6"
           />
           <MenuItem
             icon="list-outline"
-            title="Lịch sử phản hồi"
+            title="Feedback History"
             onPress={() => navigation.navigate("FeedbackHistory")}
             color="#8B5CF6"
             isLast={true}
           />
         </View>
 
-        {/* Đăng xuất */}
         <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
           <Ionicons name="log-out-outline" size={22} color="#EF4444" />
-          <Text style={styles.logoutBtnText}>Đăng xuất</Text>
+          <Text style={styles.logoutBtnText}>Log out</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -1,8 +1,6 @@
 import axiosClient from "./apiClient";
 
-/**
- * 1. Lấy dữ liệu cảm biến mới nhất (Dashboard)
- */
+//get sensor data
 export const fetchLatestSensorData = async () => {
   try {
     const response = await axiosClient.get("/iot/latest-data");
@@ -14,14 +12,14 @@ export const fetchLatestSensorData = async () => {
 };
 
 /**
- * 2. Lấy lịch sử cảm biến (Dùng để vẽ biểu đồ)
- * @param {number} hours - Số giờ muốn lấy lịch sử (mặc định 24)
- * @param {number} max_points - Số điểm tối đa muốn hiển thị trên Chart
+ * get sensorlog -> chart
+ * @param {number} hours
+ * @param {number} max_points
  */
 export const fetchSensorHistory = async (hours = 24, max_points = 50) => {
   try {
     const response = await axiosClient.get("/iot/sensor-history", {
-      params: { hours, max_points }, // Gửi query param ?hours=24
+      params: { hours, max_points },
     });
     return response.data;
   } catch (error) {
@@ -30,9 +28,7 @@ export const fetchSensorHistory = async (hours = 24, max_points = 50) => {
   }
 };
 
-/**
- * 3. Lấy trạng thái tất cả thiết bị (Bơm, Quạt, Đèn)
- */
+//get all device
 export const fetchAllDevices = async () => {
   try {
     const response = await axiosClient.get("/iot/devices");
@@ -42,10 +38,7 @@ export const fetchAllDevices = async () => {
     throw error;
   }
 };
-/**
- * 4. Điều khiển thiết bị (Mode, PWM, Timer)
- * Gửi partial data giúp tránh ghi đè dữ liệu không mong muốn
- */
+//control device
 export const updateDeviceSettings = async (deviceIndex, settings = {}) => {
   try {
     const payload = {
@@ -64,15 +57,15 @@ export const updateDeviceSettings = async (deviceIndex, settings = {}) => {
     const response = await axiosClient.post("/iot/control-device", payload);
     return response.data;
   } catch (error) {
-    console.error("❌ Full error:", error);
-    console.error("❌ Response data:", error.response?.data);
-    console.error("❌ Response status:", error.response?.status);
+    console.error(" Full error:", error);
+    console.error(" Response data:", error.response?.data);
+    console.error(" Response status:", error.response?.status);
     const errorMsg = error.response?.data?.detail || error.message;
     throw new Error(errorMsg);
   }
 };
 
-// Chuyển Mode: Lưu ý BE yêu cầu AUTO phải có Timer
+//change mode
 export const changeDeviceMode = (
   deviceIndex,
   mode,
@@ -80,7 +73,7 @@ export const changeDeviceMode = (
   end_hour = null,
 ) => {
   const payload = { mode };
-  // Nếu chuyển sang AUTO mode, bắt buộc phải có timer
+  //timer required when change-> mode auto
   if (mode === 1) {
     if (start_hour === null || end_hour === null) {
       console.error("AUTO mode requires start_hour and end_hour");
@@ -101,15 +94,15 @@ export const changeDevicePWM = (deviceIndex, pwmValue) =>
 
 export const updateDeviceTimer = (deviceIndex, start, end) =>
   updateDeviceSettings(deviceIndex, { start_hour: start, end_hour: end });
-// Tắt thiết bị (mode 0)
+// OFF (mode 0)
 export const turnOffDevice = (deviceIndex) =>
   updateDeviceSettings(deviceIndex, { mode: 0 });
 
-// Bật manual (mode 2) với PWM tùy chọn
+// MANUAL(mode 2) with manual pwm
 export const turnOnManual = (deviceIndex, pwmValue = 128) =>
   updateDeviceSettings(deviceIndex, { mode: 2, manual_pwm: pwmValue });
 
-// Bật auto (mode 1) với timer bắt buộc
+// AUTO (mode 1) with timer
 export const turnOnAuto = (deviceIndex, start_hour, end_hour, pwmValue = 128) =>
   updateDeviceSettings(deviceIndex, {
     mode: 1,
@@ -117,9 +110,8 @@ export const turnOnAuto = (deviceIndex, start_hour, end_hour, pwmValue = 128) =>
     end_hour,
     manual_pwm: pwmValue,
   });
-/**
- * 6. Lấy lịch sử thông báo
- */
+
+// Notifications
 export const fetchNotifications = async () => {
   try {
     const response = await axiosClient.get("/iot/notifications");
@@ -129,6 +121,7 @@ export const fetchNotifications = async () => {
     throw error;
   }
 };
+// notification haven't been read?
 export const markAllNotificationsAsReadApi = async () => {
   try {
     const response = await axiosClient.put("/iot/notifications/read-all");

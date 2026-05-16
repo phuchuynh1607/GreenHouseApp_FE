@@ -18,21 +18,21 @@ const SystemThresholdScreen = ({ navigation }) => {
   const sensors = [
     {
       type: "temp",
-      title: "Hệ thống: Nhiệt độ",
+      title: "Temp Threshold",
       icon: "thermometer-outline",
       color: "#EF4444",
       unit: "°C",
     },
     {
       type: "soil",
-      title: "Hệ thống: Độ ẩm đất",
+      title: "Soil Threshold",
       icon: "leaf-outline",
       color: "#10B981",
       unit: "%",
     },
     {
       type: "light",
-      title: "Hệ thống: Ánh sáng",
+      title: "Light Threshold",
       icon: "sunny-outline",
       color: "#F59E0B",
       unit: "%",
@@ -43,9 +43,9 @@ const SystemThresholdScreen = ({ navigation }) => {
     useThreshold();
 
   const [localThresholds, setLocalThresholds] = useState({
-    temp: { min: "0", max: "0" },
-    soil: { min: "0", max: "0" },
-    light: { min: "0", max: "0" },
+    temp: { min: "10", max: "35" },
+    soil: { min: "40", max: "80" },
+    light: { min: "5", max: "80" },
   });
 
   useEffect(() => {
@@ -77,27 +77,30 @@ const SystemThresholdScreen = ({ navigation }) => {
 
   const handleSave = async (type) => {
     const data = localThresholds[type];
+    const labels = {
+      temp: "Temperature",
+      soil: "Soil moisture",
+      light: "Light",
+    };
+
     const minValue = parseFloat(data.min);
     const maxValue = parseFloat(data.max);
 
     if (isNaN(minValue) || isNaN(maxValue)) {
-      Alert.alert("Lỗi", "Vui lòng nhập con số hợp lệ.");
+      Alert.alert("Error", "Invalid input");
       return;
     }
 
     if (minValue >= maxValue) {
-      Alert.alert("Lỗi", "Ngưỡng dưới phải nhỏ hơn ngưỡng trên.");
+      Alert.alert("Error", "Min value must be smaller than max");
       return;
     }
 
     try {
-      await updateAdminDefault(type, minValue, maxValue);
-      Alert.alert(
-        "Thành công",
-        `Đã cập nhật ngưỡng hệ thống cho ${type.toUpperCase()}`,
-      );
+      await updateThreshold(type, minValue, maxValue);
+      Alert.alert("Succesfully!", `Updated threshold for ${labels[type]}`);
     } catch (error) {
-      Alert.alert("Lỗi", "Không thể cập nhật cấu hình hệ thống.");
+      Alert.alert("Error", "Update threshold failed");
     }
   };
 
@@ -115,7 +118,7 @@ const SystemThresholdScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Cấu hình hệ thống</Text>
+        <Text style={styles.headerTitle}>System Setting</Text>
         <TouchableOpacity onPress={handleRefreshData}>
           <Ionicons name="refresh-outline" size={24} color="#fff" />
         </TouchableOpacity>
@@ -127,8 +130,8 @@ const SystemThresholdScreen = ({ navigation }) => {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={styles.description}>
-            Thiết lập giá trị mặc định cho toàn bộ hệ thống. Các thay đổi này sẽ
-            áp dụng trực tiếp cho những người dùng sử dụng cấu hình mặc định.
+            Set Defaults Threshold for System. If users don't have a custom
+            threshold for their sensor, they will use default thresholds.
           </Text>
 
           {sensors.map((sensor) => (
@@ -148,8 +151,7 @@ const SystemThresholdScreen = ({ navigation }) => {
               color="#6B7280"
             />
             <Text style={styles.infoText}>
-              Lưu ý: Bạn đang chỉnh sửa dữ liệu ở cấp độ cao nhất. Hãy kiểm tra
-              kỹ các thông số trước khi cập nhật.
+              P/s: You must decide right thresholds for your system!
             </Text>
           </View>
         </ScrollView>
